@@ -18,6 +18,7 @@ namespace app {
     public:
         Node() {
             _visiable = true;
+            _alpha    = 1.0;
         }
         virtual ~Node() {;}
         

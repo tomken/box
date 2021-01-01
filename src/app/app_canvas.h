@@ -13,6 +13,12 @@ namespace app {
     
     class Paint {
         friend class Canvas;
+        
+    public:
+        void setAlpha(float alpha) {
+            _paint.innerColor = _paint.outerColor = nvgRGBAf(1,1,1,alpha);
+        }
+        
     private:
         NVGpaint _paint;
     };
@@ -50,6 +56,9 @@ namespace app {
         void setStrokeColor(Color color);
         void setStrokePaint(const Paint& paint);
         void stroke();
+        
+        void setAlpha(float value);
+        
         void push();
         void pop();
         

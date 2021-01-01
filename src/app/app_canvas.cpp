@@ -127,6 +127,10 @@ namespace app {
         nvgStroke(vg);
     }
     
+    void Canvas::setAlpha(float value) {
+        nvgGlobalAlpha(vg, value);
+    }
+    
     void Canvas::push() {
         nvgSave(vg);
     }

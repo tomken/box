@@ -16,6 +16,7 @@ namespace app {
         canvas.push();
         canvas.translate(_x, _y);
         canvas.beginPath();
+//        canvas.setAlpha(_alpha);
         
         if (_image == 0) {
             _image = canvas.loadImage(_path);
@@ -25,6 +26,7 @@ namespace app {
         }
         
         if (_image > 0) {
+            _paint.setAlpha(_alpha);
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);
             canvas.fill();
