@@ -3,6 +3,7 @@
 #define __CANVAS_H__
 
 #include "app_color.h"
+
 #include "../nanovg/nanovg.h"
 
 #include <string>
@@ -61,9 +62,9 @@ namespace app {
         void beginPath();
         void moveTo(float x, float y);
         void lineTo(float x, float y);
-        void bezierTo(NVGcontext* ctx, float c1x, float c1y, float c2x, float c2y, float x, float y);
-        void quadTo(NVGcontext* ctx, float cx, float cy, float x, float y);
-        void arcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float radius);
+        void bezierTo(float c1x, float c1y, float c2x, float c2y, float x, float y);
+        void quadTo(float cx, float cy, float x, float y);
+        void arcTo(float x1, float y1, float x2, float y2, float radius);
         void closePath();
         
     public:

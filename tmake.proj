@@ -2,6 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 # 以下内容为python语法
+def remove_src(str, list):
+  for src in list[::-1]:
+    if str in src:
+      list.remove(src)
 
 # 指定编译的源码
 src_list = []
@@ -17,15 +21,28 @@ h_dirs = []
 h_dirs.append(tmake_path('./include'))
 h_dirs.append(tmake_path('./src'))
 
+flags = ''
 defs = []
-defs.append('_GLFW_COCOA')
+
+if TMAKE_TARGET == "mac":
+  defs.append('_GLFW_COCOA')
+  flags += ' -framework Cocoa '
+  flags += ' -framework IOKit '
+  flags += ' -framework CoreFoundation '
+  flags += ' -framework OpenGL '
+  remove_src("win32_", src_list)
+  remove_src("wgl_context", src_list)
+
+if TMAKE_TARGET == "windows":
+  defs.append('_GLFW_WIN32')
+  flags += ' -lgdi32 '
+  remove_src("cocoa_", src_list)
+  remove_src("posix_", src_list)
+  remove_src("nsgl_context", src_list)
+
 defs.append('ROOT_PATH="' + os.getcwd().replace('\\', "/") + '"')
 
-flags = ''
-flags += ' -framework Cocoa '
-flags += ' -framework IOKit '
-flags += ' -framework CoreFoundation '
-flags += ' -framework OpenGL '
+print src_list
 
 # 指定编译二进制
 tmake_cxx_binary(
@@ -34,7 +51,11 @@ tmake_cxx_binary(
   include_dirs = h_dirs,
   linker_flags = flags,
   defines = defs,
-  deps = []
+  deps = [],
+  windows_deps = [
+    'gdi32.lib',
+    'Opengl32',
+  ],
 )
 
 

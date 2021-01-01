@@ -1,6 +1,7 @@
 
 #include "app_canvas.h"
 #include "app_path.h"
+#include "app_window.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
@@ -158,15 +159,15 @@ namespace app {
         nvgLineTo(vg, x, y);
     }
     
-    void Canvas::bezierTo(NVGcontext* ctx, float c1x, float c1y, float c2x, float c2y, float x, float y) {
+    void Canvas::bezierTo(float c1x, float c1y, float c2x, float c2y, float x, float y) {
         nvgBezierTo(vg, c1x, c1y, c2x, c2y, x, y);
     }
     
-    void Canvas::quadTo(NVGcontext* ctx, float cx, float cy, float x, float y) {
+    void Canvas::quadTo(float cx, float cy, float x, float y) {
         nvgQuadTo(vg, cx, cy, x, y);
     }
     
-    void Canvas::arcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float radius) {
+    void Canvas::arcTo(float x1, float y1, float x2, float y2, float radius) {
         nvgArcTo(vg, x1, y1, x2, y2, radius);
     }
     
@@ -175,23 +176,23 @@ namespace app {
     }
     
     void Canvas::begin(int w, int h, float ratio) {
-        nvgBeginFrame(vg, w, h, ratio);
+        //nvgBeginFrame(vg, w, h, ratio);
     }
     
     void Canvas::end() {
-        nvgEndFrame(vg);
+        //nvgEndFrame(vg);
     }
     
     void Canvas::translate(float x, float y) {
-        nvgTranslate(vg, x, y);
+        //nvgTranslate(vg, x, y);
     }
     
     void Canvas::rotate(float angle) {
-        nvgRotate(vg, angle);
+        //nvgRotate(vg, angle);
     }
     
     void Canvas::scale(float x, float y) {
-        nvgScale(vg, x, y);
+        //nvgScale(vg, x, y);
     }
     
 }

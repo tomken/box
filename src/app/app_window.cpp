@@ -65,6 +65,7 @@ namespace app {
         glfwSetKeyCallback(_win, _key_cb);
         
         glfwMakeContextCurrent(_win);
+        gladLoadGL(glfwGetProcAddress);
         glfwSwapInterval(1);
         
         _canvas = new Canvas();

@@ -2,6 +2,7 @@
 #ifndef __APP_WINDOW_H__
 #define __APP_WINDOW_H__
 
+#include "../glfw/glad/gl.h"
 #include "../glfw/glfw3.h"
 
 #include "app_canvas.h"

@@ -69,7 +69,6 @@ void Box::onCreate() {
     layer->addNode(ren);
     
     // add box
-    
     int count = row * col;
     for (int i=0; i<count; i++) {
         int x;
@@ -84,14 +83,14 @@ void Box::onCreate() {
         _boxs.push_back(image);
     }
 
-//
-//    // add circle
-//    Shape* circle = new Shape();
-//    circle->setPosition(300, 300);
-//    circle->setSize(100, 100);
-//    circle->setType(ShapeTypeCircle);
-//    circle->setFillColor(Color::Gray);
-//    layer->addNode(circle);
+
+    // add circle
+    Shape* circle = new Shape();
+    circle->setPosition(300, 300);
+    circle->setSize(100, 100);
+    circle->setType(ShapeTypeCircle);
+    circle->setFillColor(Color::DarkBlue);
+    layer->addNode(circle);
     
     scene->addLayer(layer);
     
