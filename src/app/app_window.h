@@ -31,7 +31,11 @@ namespace app {
         
     public:
         virtual void onCreate() = 0;
-        virtual void onClick(int x, int y) {;}
+        
+        virtual void onPress(int x, int y) {;}
+        virtual void onMove(int x, int y) {;}
+        virtual void onRelease(int x, int y) {;}
+        
         virtual void onKeyPress(int key) {;}
         virtual void onDraw(Canvas& canvas) {;}
         

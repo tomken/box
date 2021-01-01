@@ -4,6 +4,7 @@
 const int boxSize = 64;
 const int col = 15;
 const int row = 10;
+const int count = col * row;
 
 Box::Box(int w, int h) : Window(col * boxSize, row * boxSize) {
     clickCount = 0;
@@ -13,7 +14,30 @@ Box::~Box() {
     
 }
 
-void Box::onClick(int x, int y) {
+void Box::onPress(int x, int y) {
+    isPress = true;
+}
+
+void Box::onMove(int x, int y) {
+    if (isPress) {
+        if (x < 0 || x > _width)
+            return;
+        
+        if (y < 0 || y > _height)
+            return;
+         
+        int index;
+        convert2index(x, y, index);
+        Image* box = _boxs[index];
+        box->setAlpha(0.6);
+        
+        if (renIndex == index) {
+            changeScene("end");
+        }
+    }
+}
+
+void Box::onRelease(int x, int y) {
     if (currentScene() == _start) {
         resetGame();
         changeScene("game");
@@ -31,7 +55,7 @@ void Box::onClick(int x, int y) {
         changeScene("menu");
     }
     
-//    printf("box x=%d y=%d\n", x, y);
+    isPress = false;
 }
 
 void Box::onKeyPress(int key) {
@@ -79,7 +103,11 @@ void Box::convert2index(int x, int y, int &index) {
     int c = x / boxSize;
     int r = y / boxSize;
     index = r * col + c;
-    // printf("index=%2d r=%2d c=%2d\n", index, r, c);
+    if (index < 0)
+        index = 0;
+    if (index >= count) {
+        index = count - 1;
+    }
 }
 
 int Box::random(int min, int max){
@@ -112,7 +140,6 @@ void Box::initStart() {
 void Box::initGame() {
     renX = 0;
     renY = 0;
-    int count = row * col;
     renIndex = random(0, count);
     convert2xy(renIndex, renX, renY);
     
@@ -139,6 +166,15 @@ void Box::initGame() {
         layer->addNode(image);
         _boxs.push_back(image);
     }
+    /*int grx = random(0, _width);
+    int gry = random(0, _height);
+    Shape* shape = new Shape();
+    shape->setPosition(grx, gry);
+    shape->setSize(1000, 1000);
+    shape->setType(ShapeTypeCircle);
+    shape->setAlpha(0.9);
+    shape->setFillColor(Color::Green);
+    layer->addNode(shape);*/
     
     _game->addLayer(layer);
     
@@ -171,7 +207,7 @@ void Box::initEnd() {
 void Box::resetGame() {
     renX = 0;
     renY = 0;
-    int count = row * col;
+    
     renIndex = random(0, count);
     convert2xy(renIndex, renX, renY);
     ren->setPosition(renX, renY);

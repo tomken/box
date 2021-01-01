@@ -17,13 +17,17 @@ static void _cursor_cb(GLFWwindow* window, double x, double y) {
     if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_DISABLED) {
         xpos = x;
         ypos = y;
+        app::Window* win = (app::Window*)glfwGetWindowUserPointer(window);
+        win->onMove(x, y);
     }
 }
 
 static void _mouse_cb(GLFWwindow* window, int button, int action, int mods) {
     app::Window* win = (app::Window*)glfwGetWindowUserPointer(window);
     if (action == GLFW_PRESS) {
-        win->onClick(xpos, ypos);
+        win->onPress(xpos, ypos);
+    } else if (action == GLFW_RELEASE) {
+        win->onRelease(xpos, ypos);
     }
 }
 

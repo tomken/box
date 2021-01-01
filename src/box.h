@@ -15,7 +15,9 @@ public:
     virtual void onCreate();
     
 public:
-    virtual void onClick(int x, int y);
+    virtual void onPress(int x, int y);
+    virtual void onMove(int x, int y);
+    virtual void onRelease(int x, int y);
     virtual void onKeyPress(int key);
     
 private:
@@ -35,6 +37,8 @@ private:
     int    renY;
     int    renIndex;
     int    clickCount;
+    
+    bool   isPress;
     
     Scene*  _start;
     Scene*  _game;
