@@ -64,7 +64,7 @@ void Box::onCreate() {
     // add ren
     ren = new Image();
     ren->setPosition(0, 0);
-    ren->setSize(100, 100);
+    ren->setSize(boxSize, boxSize);
     ren->setPath("xiaoren.png");
     layer->addNode(ren);
     
@@ -83,14 +83,15 @@ void Box::onCreate() {
         _boxs.push_back(image);
     }
 
-
     // add circle
+    /*
     Shape* circle = new Shape();
     circle->setPosition(300, 300);
-    circle->setSize(100, 100);
+    circle->setSize(boxSize, boxSize);
     circle->setType(ShapeTypeCircle);
     circle->setFillColor(Color::DarkBlue);
     layer->addNode(circle);
+    // */
     
     scene->addLayer(layer);
     
