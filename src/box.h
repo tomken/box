@@ -21,11 +21,14 @@ public:
 private:
     void convert2xy(int index, int &x, int &y);
     void convert2index(int x, int y, int &index);
+    int random(int min, int max);
     
 private:
     Image* ren;
     int    renX;
     int    renY;
+    int    renIndex;
+    int    clickCount;
     
     std::vector<Image*>  _boxs;
 };
