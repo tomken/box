@@ -3,11 +3,6 @@
 #include "app_path.h"
 #include "app_window.h"
 
-#ifdef __APPLE__
-#include <OpenGL/gl3.h>
-#include <OpenGL/glu.h>
-#endif
-
 #define NANOVG_GL3_IMPLEMENTATION
 #include "../nanovg/nanovg_gl.h"
 
@@ -176,23 +171,23 @@ namespace app {
     }
     
     void Canvas::begin(int w, int h, float ratio) {
-        //nvgBeginFrame(vg, w, h, ratio);
+        nvgBeginFrame(vg, w, h, ratio);
     }
     
     void Canvas::end() {
-        //nvgEndFrame(vg);
+        nvgEndFrame(vg);
     }
     
     void Canvas::translate(float x, float y) {
-        //nvgTranslate(vg, x, y);
+        nvgTranslate(vg, x, y);
     }
     
     void Canvas::rotate(float angle) {
-        //nvgRotate(vg, angle);
+        nvgRotate(vg, angle);
     }
     
     void Canvas::scale(float x, float y) {
-        //nvgScale(vg, x, y);
+        nvgScale(vg, x, y);
     }
     
 }
