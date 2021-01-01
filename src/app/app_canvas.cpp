@@ -56,7 +56,16 @@ namespace app {
         int w;
         int h;
         nvgImageSize(vg, image, &w, &h);
-        paint._paint = nvgImagePattern(vg, 0, 0, 100, 100, 0.0f, image, 1);
+        paint._paint = nvgImagePattern(vg, 0, 0, w, h, 0.0f, image, 1);
+        return paint;
+    }
+    
+    Paint Canvas::createImagePattern(int image, float w, float h) {
+        Paint paint;
+        if (image == 0)
+            return paint;
+        
+        paint._paint = nvgImagePattern(vg, 0, 0, w, h, 0.0f, image, 1);
         return paint;
     }
     

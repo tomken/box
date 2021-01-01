@@ -34,6 +34,7 @@ namespace app {
                                    Color icol, Color ocol);
         
         Paint createImagePattern(int image);
+        Paint createImagePattern(int image, float w, float h);
         Paint createImagePattern(float ox, float oy, float ex, float ey,
                                  float angle, int image, float alpha);
         

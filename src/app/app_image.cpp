@@ -20,7 +20,7 @@ namespace app {
         if (_image == 0) {
             _image = canvas.loadImage(_path);
             if (_image > 0) {
-                _paint = canvas.createImagePattern(_image);
+                _paint = canvas.createImagePattern(_image, _w, _h);
             }
         }
         
