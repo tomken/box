@@ -22,7 +22,7 @@ void Box::onClick(int x, int y) {
         int index;
         convert2index(x, y, index);
         Image* box = _boxs[index];
-        box->setVisiable(false);
+        box->setAlpha(0.6);
         
         if (renIndex == index) {
             changeScene("end");
@@ -90,6 +90,12 @@ void Box::initStart() {
     _start = new Scene();
     Layer* layer = new Layer();
     
+    Shape* shape = new Shape();
+    shape->setPosition(0, 0);
+    shape->setSize(_width, _height);
+    shape->setFillColor(Color::White);
+    layer->addNode(shape);
+    
     int x = (_width  - 280) / 2;
     int y = (_height - 325) / 2;
     
@@ -143,6 +149,12 @@ void Box::initEnd() {
     _end = new Scene();
     Layer* layer = new Layer();
     
+    Shape* shape = new Shape();
+    shape->setPosition(0, 0);
+    shape->setSize(_width, _height);
+    shape->setFillColor(Color::White);
+    layer->addNode(shape);
+    
     int x = (_width  - 534) / 2;
     int y = (_height - 300) / 2;
     
@@ -166,6 +178,6 @@ void Box::resetGame() {
     
     for (int i=0; i<count; i++) {
         Image* image = _boxs[i];
-        image->setVisiable(true);
+        image->setAlpha(1.0);
     }
 }
