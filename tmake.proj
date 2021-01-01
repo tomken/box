@@ -1,0 +1,40 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# 以下内容为python语法
+
+# 指定编译的源码
+src_list = []
+src_list += tmake_glob(tmake_path('./include/'), '*.h', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.h', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.c', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.cpp', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.cc', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.m', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.mm', True)
+
+h_dirs = []
+h_dirs.append(tmake_path('./include'))
+h_dirs.append(tmake_path('./src'))
+
+defs = []
+defs.append('_GLFW_COCOA')
+defs.append('ROOT_PATH="' + os.getcwd().replace('\\', "/") + '"')
+
+flags = ''
+flags += ' -framework Cocoa '
+flags += ' -framework IOKit '
+flags += ' -framework CoreFoundation '
+flags += ' -framework OpenGL '
+
+# 指定编译二进制
+tmake_cxx_binary(
+  name = 'box',
+  srcs = src_list,
+  include_dirs = h_dirs,
+  linker_flags = flags,
+  defines = defs,
+  deps = []
+)
+
+
