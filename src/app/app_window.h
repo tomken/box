@@ -22,6 +22,10 @@ namespace app {
         
         void changeScene(const std::string& name);
         
+        Scene* currentScene() {
+            return _scene;
+        }
+        
     public:
         void run();
         

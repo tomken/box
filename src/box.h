@@ -23,6 +23,12 @@ private:
     void convert2index(int x, int y, int &index);
     int random(int min, int max);
     
+    void initStart();
+    void initGame();
+    void initEnd();
+    
+    void resetGame();
+    
 private:
     Image* ren;
     int    renX;
@@ -30,6 +36,9 @@ private:
     int    renIndex;
     int    clickCount;
     
+    Scene*  _start;
+    Scene*  _game;
+    Scene*  _end;
     std::vector<Image*>  _boxs;
 };
 
