@@ -7,6 +7,19 @@
 #include "tl_animator_chain.h"
 
 namespace tl {
+    
+    class AnimationInfo {
+    public:
+        AnimationType type;
+        std::string   tag;
+        std::string   with;
+        std::string   after;
+        std::string   event;
+        float         from;
+        float         to;
+        int           duration;
+        int           delay;
+    };
             
     class AnimatorCallback {
     public:
@@ -14,7 +27,7 @@ namespace tl {
 
     public:
         virtual void requestVSync(int32_t delay) = 0;
-        virtual void onAnimatorRange(app::UUID uuid, AnimationType type, json& value) = 0;
+        virtual void onAnimatorRange(app::UUID uuid, const AnimationInfo& info) = 0;
     };
 
     class AnimatorManager : public AnimatorObserver, public VSyncRequester {
@@ -33,12 +46,12 @@ namespace tl {
 //        void cancelEvent(std::string elementTag, EventType type);
         
     public:
-        void makeAnimator(const app::UUID& uuid, const json& obj);
+        void makeAnimator(const app::UUID& uuid, const AnimationInfo& info);
         void clear();
         void dump(std::string& result);
         
     private:
-        AnimatorBase* createAnimator(const json& obj);
+        AnimatorBase* createAnimator(const AnimationInfo& info);
         
     private: // for AnimatorObserver
         virtual void onAnimatorBegin(AnimatorBase* animator) {;}

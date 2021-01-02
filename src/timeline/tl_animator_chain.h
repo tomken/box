@@ -7,9 +7,6 @@
 #include <vector>
 #include <map>
 
-#include "json.hpp"
-using json = nlohmann::json;
-
 namespace tl {
     
     class AnimatorChain;
@@ -31,7 +28,6 @@ namespace tl {
         void stop();
         bool isFinished() const;
         void dump(std::string& result, int32_t level);
-        void dumpGanttJson(json& gantt, const std::string& tag, int32_t curTime, bool root, const std::string& color);
         
     private:
         void setObserver() {

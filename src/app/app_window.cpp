@@ -41,7 +41,6 @@ static void _key_cb(GLFWwindow* window, int key, int scancode, int action, int m
     }
 }
 
-
 namespace app {
 
     Window::Window(int w, int h) {
@@ -72,11 +71,19 @@ namespace app {
         gladLoadGL(glfwGetProcAddress);
         glfwSwapInterval(1);
         
+        // 0.3f, 0.3f, 0.32f, 1.0f
+        _bgR = 0.3f;
+        _bgG = 0.3f;
+        _bgB = 0.3f;
+        _bgA = 1.0f;
+        
         _canvas = new Canvas();
+        _animator = new tl::AnimatorManager(this);
     }
     
     Window::~Window() {
         delete _canvas;
+        delete _animator;
         
         glfwDestroyWindow(_win);
         glfwTerminate();
@@ -94,7 +101,7 @@ namespace app {
             glfwGetWindowContentScale(_win, &X_SCALE, &Y_SCALE);
             
             glViewport(0, 0, width, height);
-            glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+            glClearColor(_bgR, _bgG, _bgB, _bgA);
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
             
             if (_scene) {
@@ -120,6 +127,27 @@ namespace app {
         glfwSetWindowTitle(_win, title.c_str());
     }
     
+    void Window::requestRefresh() {
+        glfwPostEmptyEvent();
+    }
+    
+    void Window::requestVSync(int32_t delay) {
+        requestRefresh();
+    }
+    
+    void Window::rotationTo(const app::UUID& uuid, float from, float to) {
+        tl::AnimationInfo info;
+        info.duration = 200;
+        info.delay    = 0;
+        info.from = from;
+        info.to   = to;
+        info.type = tl::AnimationTypeRotation;
+        info.tag  = "man_rotation";
+        
+        _animator->makeAnimator(uuid, info);
+        _animator->play();
+    }
+
 }
 
 

@@ -176,6 +176,8 @@ void Boxes::moveTo(int manRow, int manCol,
     _manRow = to1Row;
     _manCol = to1Col;
     BoxInfo info;
+    info.fromRow = manRow;
+    info.fromCol = manCol;
     info.toRow = to1Row;
     info.toCol = to1Col;
     info.type  = BoxTypeMan;

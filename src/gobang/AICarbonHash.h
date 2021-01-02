@@ -10,9 +10,12 @@
 #define _AICARBONHASH
 
 #include <stdlib.h>
-#include <malloc.h>
+#include <math.h>
 #include <memory.h>
 #include <assert.h>
+
+#include <algorithm>
+
 #include "OXTypes.h"
 
 extern const ULONG hashValA[4096], hashValB[4096], hashValC[4096];
@@ -95,7 +98,7 @@ public:
       {
         ULONG maxBytes = info_max_memory;
         if(maxBytes == 0) maxBytes = 1000000000; //1GB
-        maxBytes = __max(maxBytes, 7500000) - 7000000;
+        maxBytes = std::max(maxBytes, (ULONG)7500000) - 7000000;
         ULONG num = maxBytes / sizeof(HashRec);
 
         if(maxSize * 2 < num || maxSize > num){
@@ -103,7 +106,7 @@ public:
           maxSize = num;
         }
         if(hashASize < maxSize){
-          hashASize = __min(size * 2, maxSize);
+          hashASize = std::min(size * 2, maxSize);
           memset(elem, 0, hashASize * sizeof(HashRec));
         }
       }

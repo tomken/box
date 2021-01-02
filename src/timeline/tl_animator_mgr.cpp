@@ -86,34 +86,30 @@ namespace tl {
 //        }
 //    }
     
-    void AnimatorManager::makeAnimator(const app::UUID& uuid, const json& obj) {
-        std::string tag = obj["tag"].get<std::string>();
-        if (tag.empty())
-            return;
-
-        AnimatorBase* a = createAnimator(obj);
+    void AnimatorManager::makeAnimator(const app::UUID& uuid, const AnimationInfo& info) {
+        AnimatorBase* a = createAnimator(info);
         a->setUuid(uuid);
-        _animators[tag] = a;
+        _animators[info.tag] = a;
         std::string target;
         
-        if (!obj["width"].empty()) {
-            target = obj.at("width").get<std::string>();
+        if (!info.with.empty()) {
+            target = info.with;
             if (_eventChain.find(target) != _eventChain.end()) {//in eventChain
                 _eventChain[target]->add(a, AnimatorChain::AnimatorRelateWith, _animators[target]);
             } else {
                 _root->add(a, AnimatorChain::AnimatorRelateWith, _animators[target]);
             }
-        } else if (!obj["after"].empty()) {
-            target = obj["after"].get<std::string>();
+        } else if (!info.after.empty()) {
+            target = info.after;
             if (_eventChain.find(target) != _eventChain.end()) {//in eventChain
                 _eventChain[target]->add(a, AnimatorChain::AnimatorRelateAfter, _animators[target]);
             } else {
                 _root->add(a, AnimatorChain::AnimatorRelateAfter, _animators[target]);
             }
-        } else if (!obj["event"].empty()) {
-            assert(_eventChain.find(tag) == _eventChain.end());
-            _eventChain[tag] = new AnimatorChain();
-            _eventChain[tag]->add(a);
+        } else if (!info.event.empty()) {
+            assert(_eventChain.find(info.tag) == _eventChain.end());
+            _eventChain[info.tag] = new AnimatorChain();
+            _eventChain[info.tag]->add(a);
         } else {
             _root->add(a);
         }
@@ -140,61 +136,60 @@ namespace tl {
         _root->dump(result);
     }
 
-    AnimatorBase* AnimatorManager::createAnimator(const json& obj) {
-        std::string animationType = obj["type"].get<std::string>();
-        AnimationType eType = AnimationUtil::covertStrToType(animationType);
+    AnimatorBase* AnimatorManager::createAnimator(const AnimationInfo& info) {
+        AnimationType eType = info.type;
         if(eType == AnimationTypeUnknown) {
             // LMK_WARNING("ani", "animation type error. %s", data.c_str());
         }
         AnimatorBase* ani = NULL;
         if (eType == AnimationTypeColor) {
             AnimatorColor* base = new AnimatorColor();
-            int32_t fromInt = obj["from"].get<int>();
-            int32_t toInt   = obj["to"].get<int>();
+            int32_t fromInt = info.from;
+            int32_t toInt   = info.to;
             app::Color from(fromInt);
             app::Color to(toInt);
             base->setValues(from, to);
             ani = base;
         } else if (eType == AnimationTypePath) {
-            std::string p = obj["path"].get<std::string>();
-            app::StringSlice path(p.c_str());
-            
-            app::Point from, to;
-
-            from.x = obj["from_x"].get<float>();
-            from.y = obj["from_y"].get<float>();
-            
-            to.x = obj["to_x"].get<float>();
-            to.y = obj["to_x"].get<float>();
-            
-            AnimatorLine* line;
-            if (path == "quad") {
-                AnimatorQuad* quad = new AnimatorQuad();
-                app::Point ctr;
-                ctr.x = obj["c_x"].get<float>();
-                ctr.y = obj["c_y"].get<float>();
-
-                quad->setControlPoint(ctr);
-                line = quad;
-            } else if (path == "bezier") {
-                AnimatorBezier* bezier = new AnimatorBezier();
-                app::Point ctr1, ctr2;
-                
-                ctr1.x = obj["c1_x"].get<float>();
-                ctr1.y = obj["c1_y"].get<float>();
-                
-                ctr2.x = obj["c2_x"].get<float>();
-                ctr2.y = obj["c2_y"].get<float>();
-                
-                bezier->setControlPoint(ctr1, ctr2);
-                line = bezier;
-            } else {
-                line = new AnimatorLine();
-            }
-            
-            line->setValues(from, to);
-
-            ani = line;
+//            std::string p = obj["path"].get<std::string>();
+//            app::StringSlice path(p.c_str());
+//
+//            app::Point from, to;
+//
+//            from.x = obj["from_x"].get<float>();
+//            from.y = obj["from_y"].get<float>();
+//
+//            to.x = obj["to_x"].get<float>();
+//            to.y = obj["to_x"].get<float>();
+//
+//            AnimatorLine* line;
+//            if (path == "quad") {
+//                AnimatorQuad* quad = new AnimatorQuad();
+//                app::Point ctr;
+//                ctr.x = obj["c_x"].get<float>();
+//                ctr.y = obj["c_y"].get<float>();
+//
+//                quad->setControlPoint(ctr);
+//                line = quad;
+//            } else if (path == "bezier") {
+//                AnimatorBezier* bezier = new AnimatorBezier();
+//                app::Point ctr1, ctr2;
+//
+//                ctr1.x = obj["c1_x"].get<float>();
+//                ctr1.y = obj["c1_y"].get<float>();
+//
+//                ctr2.x = obj["c2_x"].get<float>();
+//                ctr2.y = obj["c2_y"].get<float>();
+//
+//                bezier->setControlPoint(ctr1, ctr2);
+//                line = bezier;
+//            } else {
+//                line = new AnimatorLine();
+//            }
+//
+//            line->setValues(from, to);
+//
+//            ani = line;
         } else if (eType == AnimationTypeMap) {
 //            AnimatorMap* base = new AnimatorMap();
 //            int32_t fromInt = obj.getAttr(key::FROM);
@@ -205,8 +200,8 @@ namespace tl {
 //            ani = base;
         } else {
             AnimatorDefault* base = new AnimatorDefault();
-            float from = obj["from"].get<float>();
-            float to   = obj["to"].get<float>();
+            float from = info.from;
+            float to   = info.to;
             base->setValues(from, to);
             ani = base;
         }
@@ -215,15 +210,9 @@ namespace tl {
         ani->addObserver(this);
         ani->setVSyncRequester(this);
         
-        if (!obj["delay"].empty()) {
-            ani->setDelay(obj["delay"].get<int>());
-        }
-        
-        if (!obj["repeatCount"].empty()) {
-            ani->setRepeatCount(obj["repeatCount"].get<int>());
-        }
+        ani->setDelay(info.delay);
 
-        ani->setDuration(obj["duration"].get<int>());
+        ani->setDuration(info.duration);
         return ani;
     }
 

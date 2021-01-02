@@ -10,12 +10,14 @@
 #include "app_canvas.h"
 #include "app_uuid.h"
 
+#include "tl_animator.h"
+
 extern float X_SCALE;
 extern float Y_SCALE;
 
 namespace app {
     
-    class Node {
+    class Node : public tl::AnimatorObserver {
     public:
         Node() {
             _uuid = UUID::make();
@@ -64,6 +66,10 @@ namespace app {
             _angle = angle;
         }
         
+        float angle() const {
+            return _angle;
+        }
+        
         void setScale(float scale) {
             _scale = scale;
         }
@@ -76,8 +82,20 @@ namespace app {
             return _visiable;
         }
         
+    public: // for animator
+        tl::AnimatorBase* fadeIn();
+        tl::AnimatorBase* fadeOut();
+        tl::AnimatorBase* rotationTo(int angle);
+        tl::AnimatorBase* animate(tl::AnimationType type, float from, float to, int duration);
+        
     public:
         virtual void onDraw(Canvas& canvas) {;}
+        
+    private: // for AnimatorObserver
+        virtual void onAnimatorBegin(tl::AnimatorBase* animator);
+        virtual void onAnimatorRangeChange(tl::AnimatorBase*, float);
+        virtual void onAnimatorEnd(tl::AnimatorBase*);
+        virtual void onAnimatorCancel(tl::AnimatorBase*) {;}
         
     protected:
         UUID  _uuid;

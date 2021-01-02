@@ -8,9 +8,11 @@
 #include "app_canvas.h"
 #include "app_scene.h"
 
+#include "tl_animator_mgr.h"
+
 namespace app {
 
-    class Window {
+    class Window : public tl::AnimatorCallback {
     public:
         Window(int w, int h);
         virtual ~Window();
@@ -31,6 +33,13 @@ namespace app {
         
     public:
         void setTitle(const std::string& title);
+        void setBackgroundColor(const Color& color) {
+            _bgR = (float)color.red() / 255;
+            _bgG = (float)color.green() / 255;
+            _bgB = (float)color.blue() / 255;
+            _bgA = (float)color.alpha() / 255;
+        }
+        void requestRefresh();
         
     public:
         virtual void onCreate() = 0;
@@ -43,6 +52,19 @@ namespace app {
         virtual void onDraw(Canvas& canvas) {;}
         
     protected:
+        tl::AnimatorManager& animator() {
+            return *_animator;
+        }
+        
+        void alphaTo(float alpha);
+        void rotationTo(const app::UUID& uuid, float from, float to);
+        void scaleTo(float angle);
+        
+    private: // for AnimatorCallback
+        virtual void requestVSync(int32_t delay);
+        virtual void onAnimatorRange(app::UUID uuid, const tl::AnimationInfo& info) {;}
+        
+    protected:
         int         _width;
         int         _height;
         
@@ -50,10 +72,16 @@ namespace app {
         GLFWwindow* _win;
         Canvas*     _canvas;
         
+        float       _bgR;
+        float       _bgG;
+        float       _bgB;
+        float       _bgA;
+        
+        tl::AnimatorManager* _animator;
+        bool                 _isPlaying;
+        
         Scene*      _scene;
-        
         std::map<std::string, Scene*> _scenes;
-        
     };
 }
 

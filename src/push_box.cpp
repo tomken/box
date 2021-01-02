@@ -157,7 +157,6 @@ void PushBox::init(const BoxInfo& info) {
         image->setPosition(x, y);
         image->setSize(box_size, box_size);
         image->setPath("box.png");
-//        image->setAlpha(1);
         image->setScale(0.9);
         _boxLayer->addNode(image);
         boxes->setData(row, col, image);
@@ -192,6 +191,14 @@ void PushBox::init(const BoxInfo& info) {
 
 void PushBox::update(const BoxInfo& info) {
     if (info.type == BoxTypeMan) {
+        if (info.fromRow < info.toRow)
+            _man->rotationTo(180);
+        if (info.fromRow > info.toRow)
+            _man->setAngle(0);
+        if (info.fromCol < info.toCol)
+            _man->setAngle(90);
+        if (info.fromCol > info.toCol)
+            _man->setAngle(270);
         _man->setPosition(info.toCol * box_size, info.toRow * box_size);
     } else if (info.type == BoxTypeBox) {
         int vx = info.toCol * box_size;

@@ -5,6 +5,8 @@
 #include <set>
 #include <string>
 
+#include "glfw3.h"
+
 #include "app_uuid.h"
 #include "app_color.h"
 
@@ -72,6 +74,7 @@ namespace tl {
 
     class AnimatorBase {
         friend class AnimatorManager;
+        friend class AnimatorCentre;
     protected:
         AnimatorBase();
         virtual ~AnimatorBase();
@@ -151,8 +154,8 @@ namespace tl {
             _isFinished   = true;
             _duration     = 200;
             _delay        = 0;
-            _startTime    = 0; // asl::TimeUtils::getTickCountUS();
-            _curTime      = 0; // asl::TimeUtils::getTickCountUS();
+            _startTime    = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
+            _curTime      = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
             _from         = T();
             _calcFrom     = _from;
             _playing      = false;
@@ -217,8 +220,8 @@ namespace tl {
             _calcFrom   = _from;
             _calcTo     = _to;
             
-            _curTime   = 0; // asl::TimeUtils::getTickCountUS();
-            _startTime = 0; // asl::TimeUtils::getTickCountUS();
+            _curTime   = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
+            _startTime = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
             
             _isFinished = false;
             
@@ -292,7 +295,7 @@ namespace tl {
         
     private:
         void nextCurTime() {
-            _curTime = 0; // asl::TimeUtils::getTickCountUS();
+            _curTime = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
             needVSync(0);
         }
         
@@ -306,13 +309,13 @@ namespace tl {
         float         _endFrame;
         bool          _playing;
         
-        uint32_t    _duration;
-        uint32_t    _delay;
-        int64_t     _startTime;
-        int64_t     _curTime;
+        uint32_t      _duration;
+        uint32_t      _delay;
+        int64_t       _startTime;
+        int64_t       _curTime;
         
-        int32_t     _repeatCount;
-        int32_t     _calcCount;
+        int32_t       _repeatCount;
+        int32_t       _calcCount;
         
         T  _from;
         T  _calcFrom;

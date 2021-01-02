@@ -1,13 +1,21 @@
+
+#ifdef __WIN32
 #include <windows.h>
+static DWORD seed;
+#else
+#include <stdint.h>
+static uint32_t seed;
+#define Int32x32To64(a, b)  ((int64_t)(((int64_t)((long)(a))) * ((long)(b))))
+#define UInt32x32To64(a, b) ((uint64_t)(((uint64_t)((uint32_t)(a))) * ((uint32_t)(b))))
+#endif
 
 // We can't use standard function rand() from stdlib because it does not work.
 // It returns same value for every move because OXMain.cpp creates new thread for every move.
 
-static DWORD seed;
-
+extern uint64_t getTickCount();
 void _randomize()
 {
-  seed = GetTickCount();
+  seed = getTickCount();
 }
 
 unsigned _random(unsigned x)
