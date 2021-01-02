@@ -93,6 +93,14 @@ void PushBox::initStart() {
 void PushBox::initGame() {
     _game = new Scene();
     
+    Layer* layer = new Layer();
+    Image* bg = new Image();
+    bg->setPosition(0, 0);
+    bg->setSize(_width, _height);
+    bg->setPath("five_background.jpg");
+    layer->addNode(bg);
+    _game->addLayer(layer);
+    
     _fixLayer = new Layer();
     _boxLayer = new Layer();
     _manLayer = new Layer();

@@ -101,7 +101,6 @@ void Five::initGame() {
     bg->setPath("five_background.jpg");
     layer->addNode(bg);
     
-    
     Image* grid = new Image();
     grid->setPosition(grid_x, grid_x);
     grid->setSize(grid_s, grid_s);
