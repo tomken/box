@@ -27,6 +27,7 @@ namespace app {
         
         if (_image > 0) {
             _paint.setAlpha(_alpha);
+            canvas.scale(_scale, _scale);
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);
             canvas.fill();

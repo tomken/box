@@ -19,6 +19,7 @@ namespace app {
         Node() {
             _visiable = true;
             _alpha    = 1.0;
+            _scale    = 1.0;
         }
         virtual ~Node() {;}
         

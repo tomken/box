@@ -159,7 +159,7 @@ void PushBox::init(const BoxInfo& info) {
         _man = new Image();
         _man->setPosition(x, y);
         _man->setSize(box_size, box_size);
-        _man->setPath("xiaoren.png");
+        _man->setPath("tortoise.png");
         _manLayer->addNode(_man);
     } else if (t == BoxTypeWhiteWall) {
         int x = col * box_size;
@@ -175,6 +175,7 @@ void PushBox::init(const BoxInfo& info) {
         Image* image = new Image();
         image->setPosition(x, y);
         image->setSize(box_size, box_size);
+        image->setScale(0.8);
         image->setPath("target.png");
         _boxLayer->addNode(image);
     }

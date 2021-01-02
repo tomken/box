@@ -150,7 +150,7 @@ void Box::initGame() {
     ren = new Image();
     ren->setPosition(renX, renY);
     ren->setSize(boxSize, boxSize);
-    ren->setPath("xiaoren.png");
+    ren->setPath("tortoise.png");
     layer->addNode(ren);
     
     // add box
