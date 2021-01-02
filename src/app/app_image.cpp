@@ -13,10 +13,28 @@ namespace app {
     }
     
     void Image::onDraw(Canvas& canvas) {
+        float a = nvgDegToRad(_angle);
+        float matrix[6];
+        nvgTransformIdentity(transform);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, -_w/2, -_h/2);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformRotate(matrix, a);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformScale(matrix, _scale, _scale);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
+        nvgTransformMultiply(transform, matrix);
+        
         canvas.push();
-        canvas.translate(_x, _y);
-        canvas.beginPath();
-//        canvas.setAlpha(_alpha);
+        canvas.beginPath(transform);
         
         if (_image == 0) {
             _image = canvas.loadImage(_path);
@@ -26,8 +44,8 @@ namespace app {
         }
         
         if (_image > 0) {
-            _paint.setAlpha(_alpha);
-            canvas.scale(_scale, _scale);
+            // _paint.setAlpha(_alpha);
+            
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);
             canvas.fill();

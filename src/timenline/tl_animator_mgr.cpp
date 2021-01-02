@@ -8,10 +8,11 @@
 #include "tl_animator_map.h"
 
 #include "app_path.h"
+#include "app_node.h"
 
 namespace tl {
     
-    AnimatorManager::AnimatorManager(IAnimatorEventListener* listener) : _root(new AnimatorChain()), _listener(listener), _needVSync(false), _minDelay(0) {
+    AnimatorManager::AnimatorManager(AnimatorCallback* cb) : _root(new AnimatorChain()), _callback(cb), _needVSync(false), _minDelay(0) {
     }
     
     AnimatorManager::~AnimatorManager() {
@@ -35,8 +36,8 @@ namespace tl {
             }
 //            if (!animIt->second->isFinished()) animIt->second->run();
         }
-        if (_needVSync && _listener) {
-            _listener->requestVSync(_minDelay);
+        if (_needVSync && _callback) {
+            _callback->requestVSync(_minDelay);
         }
     }
 
@@ -85,7 +86,7 @@ namespace tl {
 //        }
 //    }
     
-    void AnimatorManager::makeAnimator(UUID uuid, const json& obj) {
+    void AnimatorManager::makeAnimator(const app::UUID& uuid, const json& obj) {
         std::string tag = obj["tag"].get<std::string>();
         if (tag.empty())
             return;
@@ -227,47 +228,50 @@ namespace tl {
     }
 
     void AnimatorManager::onAnimatorRangeChange(AnimatorBase* ani, float range) {
-//        Element* element = (Element*)ani->uuid().data();
-//        switch (ani->type()) {
-//            case tl::AnimationTypeTranslateX: {
-//                Animator<float>* a = (Animator<float>*)ani;
-//                element->matrixTranslateX(a->getCurrent());
-//                break;
-//            }
-//            case tl::AnimationTypeTranslateY: {
-//                Animator<float>* a = (Animator<float>*)ani;
-//                element->matrixTranslateY(a->getCurrent());
-//                break;
-//            }
-//            case tl::AnimationTypeAlpha: {
-//                Animator<float>* a = (Animator<float>*)ani;
-//                element->matrixAlpha(a->getCurrent());
-//                break;
-//            }
-//            case tl::AnimationTypeRotation: {
-//                Animator<float>* a = (Animator<float>*)ani;
-//                element->matrixRotation(a->getCurrent());
-//                break;
-//            }
-//            case tl::AnimationTypeScale: {
-//                Animator<float>* a = (Animator<float>*)ani;
-//                element->matrixScale(a->getCurrent());
-//                break;
-//            }
-//            case tl::AnimationTypeColor: {
-//                Animator<app::Color>* a = (Animator<app::Color>*)ani;
-//                element->matrixColor(a->getCurrent().toARGBInt());
-//                break;;
-//            }
-//            case tl::AnimationTypePath: {
-//                Animator<app::Point>* a = (Animator<app::Point>*)ani;
-//                element->matrixTranslateX(a->getCurrent().x);
-//                element->matrixTranslateY(a->getCurrent().y);
-//                break;;
-//            }
-//            default:
-//                break;
+//        if (_callback) {
+//            _callback->onAnimatorRange(ani->uuid(), ani->type(), range);
 //        }
+        app::Node* node = (app::Node*)ani->uuid().data();
+        switch (ani->type()) {
+            case tl::AnimationTypeTranslateX: {
+                Animator<float>* a = (Animator<float>*)ani;
+                node->setPositionX(a->getCurrent());
+                break;
+            }
+            case tl::AnimationTypeTranslateY: {
+                Animator<float>* a = (Animator<float>*)ani;
+                node->setPositionY(a->getCurrent());
+                break;
+            }
+            case tl::AnimationTypeAlpha: {
+                Animator<float>* a = (Animator<float>*)ani;
+                node->setAlpha(a->getCurrent());
+                break;
+            }
+            case tl::AnimationTypeRotation: {
+                Animator<float>* a = (Animator<float>*)ani;
+                node->setAngle(a->getCurrent());
+                break;
+            }
+            case tl::AnimationTypeScale: {
+                Animator<float>* a = (Animator<float>*)ani;
+                node->setScale(a->getCurrent());
+                break;
+            }
+            case tl::AnimationTypeColor: {
+                Animator<app::Color>* a = (Animator<app::Color>*)ani;
+                // node->matrixColor(a->getCurrent().toARGBInt());
+                break;;
+            }
+            case tl::AnimationTypePath: {
+                Animator<app::Point>* a = (Animator<app::Point>*)ani;
+                node->setPositionX(a->getCurrent().x);
+                node->setPositionY(a->getCurrent().y);
+                break;;
+            }
+            default:
+                break;
+        }
     }
 
     void AnimatorManager::requestVSync(int32_t delay) {

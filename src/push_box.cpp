@@ -20,8 +20,6 @@ void PushBox::onRelease(int x, int y) {
     if (currentScene() == _start) {
         resetGame();
         changeScene("game");
-    } else if (currentScene() == _game) {
-        
     } else if (currentScene() == _end) {
         changeScene("menu");
     }
@@ -30,6 +28,15 @@ void PushBox::onRelease(int x, int y) {
 void PushBox::onKeyPress(int key) {
     if (!boxes)
         return;
+    
+    if (currentScene() == _start) {
+        resetGame();
+        changeScene("game");
+        return;
+    } else if (currentScene() == _end) {
+        changeScene("menu");
+        return;
+    }
     
    if (key == GLFW_KEY_UP) {
        boxes->moveUp();
@@ -150,7 +157,8 @@ void PushBox::init(const BoxInfo& info) {
         image->setPosition(x, y);
         image->setSize(box_size, box_size);
         image->setPath("box.png");
-        image->setAlpha(0.6);
+//        image->setAlpha(1);
+        image->setScale(0.9);
         _boxLayer->addNode(image);
         boxes->setData(row, col, image);
     } else if (t == BoxTypeMan) {
@@ -167,6 +175,7 @@ void PushBox::init(const BoxInfo& info) {
         Image* image = new Image();
         image->setPosition(x, y);
         image->setSize(box_size, box_size);
+        image->setScale(1.2);
         image->setPath("wall.png");
         _boxLayer->addNode(image);
     } else if (t == BoxTypeBall) {
@@ -175,7 +184,7 @@ void PushBox::init(const BoxInfo& info) {
         Image* image = new Image();
         image->setPosition(x, y);
         image->setSize(box_size, box_size);
-        image->setScale(0.8);
+        image->setScale(0.6);
         image->setPath("target.png");
         _boxLayer->addNode(image);
     }

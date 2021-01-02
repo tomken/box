@@ -5,8 +5,8 @@
 #include <set>
 #include <string>
 
-#include "tl_uuid.h"
-#include "../app/app_color.h"
+#include "app_uuid.h"
+#include "app_color.h"
 
 #include "tl_interpolator.h"
 
@@ -118,11 +118,11 @@ namespace tl {
             return _userData;
         }
         
-        void setUuid(UUID uuid) {
+        void setUuid(app::UUID uuid) {
             _uuid = uuid;
         }
         
-        UUID uuid() {
+        app::UUID uuid() {
             return _uuid;
         }
         
@@ -138,7 +138,7 @@ namespace tl {
         std::set<AnimatorObserver*> _observers;
         VSyncRequester*             _requester;
         void*                       _userData;
-        UUID                        _uuid;
+        app::UUID                   _uuid;
         AnimationType               _type;
     };
     

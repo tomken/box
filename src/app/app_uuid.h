@@ -1,12 +1,13 @@
 
-#ifndef __TL_UUID_H__
-#define __TL_UUID_H__
+#ifndef __APP_UUID_H__
+#define __APP_UUID_H__
 
 #include <stdint.h>
 
-namespace tl {
+namespace app {
     
     class UUID {
+        friend class Node;
     public:
         UUID() : uuid(0), _type(-1), _data(0) {;}
         UUID(unsigned int value) : uuid(value), _type(-1), _data(0) {;}
@@ -68,4 +69,4 @@ namespace tl {
     
 }
 
-#endif // __TL_UUID_H__
+#endif // __APP_UUID_H__

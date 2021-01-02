@@ -13,9 +13,11 @@ namespace app {
     }
     
     void Shape::onDraw(Canvas& canvas) {
+        nvgTransformIdentity(transform);
+        
         canvas.push();
         canvas.translate(_x, _y);
-        canvas.beginPath();
+        canvas.beginPath(transform);
         
         Color fc = _fillColor;
         fc.setAlpha(_alpha * _fillColor.alpha());

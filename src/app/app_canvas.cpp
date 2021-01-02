@@ -155,7 +155,8 @@ namespace app {
         nvgEllipse(vg, cx, cy, rx, ry);
     }
     
-    void Canvas::beginPath() {
+    void Canvas::beginPath(float* m) {
+        nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
         nvgBeginPath(vg);
     }
     
@@ -191,12 +192,17 @@ namespace app {
         nvgEndFrame(vg);
     }
     
+    void Canvas::resetTransform() {
+        nvgResetTransform(vg);
+    }
+    
     void Canvas::translate(float x, float y) {
         nvgTranslate(vg, x, y);
     }
     
     void Canvas::rotate(float angle) {
-        nvgRotate(vg, angle);
+        float a = nvgDegToRad(angle);
+        nvgRotate(vg, a);
     }
     
     void Canvas::scale(float x, float y) {

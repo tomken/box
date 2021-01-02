@@ -19,6 +19,15 @@ namespace app {
             _paint.innerColor = _paint.outerColor = nvgRGBAf(1,1,1,alpha);
         }
         
+        void setScale(float scale) {
+            nvgTransformScale(_paint.xform, scale, scale);
+        }
+        
+        void setRoation(float angle) {
+            float v = nvgDegToRad(angle);
+            nvgTransformRotate(_paint.xform, v);
+        }
+        
     private:
         NVGpaint _paint;
     };
@@ -69,7 +78,7 @@ namespace app {
         void drawEllipse(float cx, float cy, float rx, float ry);
         
     public:
-        void beginPath();
+        void beginPath(float* matrix);
         void moveTo(float x, float y);
         void lineTo(float x, float y);
         void bezierTo(float c1x, float c1y, float c2x, float c2y, float x, float y);
@@ -78,6 +87,7 @@ namespace app {
         void closePath();
         
     public:
+        void resetTransform();
         void translate(float x, float y);
         void rotate(float angle);
         void scale(float x, float y);
@@ -88,7 +98,6 @@ namespace app {
         
     private:
         NVGcontext* vg;
-        
         std::map<std::string, int>  _images;
         
     };

@@ -8,18 +8,18 @@
 
 namespace tl {
             
-    class IAnimatorEventListener {
+    class AnimatorCallback {
     public:
-        virtual ~IAnimatorEventListener() {;}
+        virtual ~AnimatorCallback() {;}
 
     public:
         virtual void requestVSync(int32_t delay) = 0;
-        virtual void onAnimatorRange(UUID uuid, AnimationType type, json& value) = 0;
+        virtual void onAnimatorRange(app::UUID uuid, AnimationType type, json& value) = 0;
     };
 
     class AnimatorManager : public AnimatorObserver, public VSyncRequester {
     public:
-        AnimatorManager(IAnimatorEventListener*);
+        AnimatorManager(AnimatorCallback*);
         ~AnimatorManager();
         
     public:
@@ -33,7 +33,7 @@ namespace tl {
 //        void cancelEvent(std::string elementTag, EventType type);
         
     public:
-        void makeAnimator(UUID uuid, const json& obj);
+        void makeAnimator(const app::UUID& uuid, const json& obj);
         void clear();
         void dump(std::string& result);
         
@@ -51,7 +51,7 @@ namespace tl {
         
     private:
         AnimatorChain*                          _root;
-        IAnimatorEventListener*                 _listener;
+        AnimatorCallback*                       _callback;
         bool                                    _needVSync;
         int32_t                                 _minDelay;
         std::map<std::string, AnimatorChain*>   _eventChain;
