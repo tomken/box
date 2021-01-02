@@ -4,6 +4,7 @@
 #define __PUSH_BOX_H__
 
 #include "app/app.h"
+#include "engine/boxes.h"
 
 using namespace app;
 
@@ -21,8 +22,10 @@ public:
 public:
     virtual void onKeyPress(int key);
     
-private:
-    void update(int x, int y);
+private: // for callback
+    void init(const BoxInfo& info);
+    void update(const BoxInfo& info);
+    void win();
     
 private:
 //    void convert2xy(int index, int &x, int &y);
@@ -37,6 +40,9 @@ private:
     
 private:
     Boxes* boxes;
+    Layer* _fixLayer;
+    Layer* _boxLayer;
+    Layer* _manLayer;
     
     Scene*  _start;
     Scene*  _game;

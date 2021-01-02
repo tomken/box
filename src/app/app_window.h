@@ -30,6 +30,9 @@ namespace app {
         void run();
         
     public:
+        void setTitle(const std::string& title);
+        
+    public:
         virtual void onCreate() = 0;
         
         virtual void onPress(int x, int y) {;}

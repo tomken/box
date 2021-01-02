@@ -17,7 +17,18 @@ enum BoxType {
     BoxTypeManBall,
 };
 
-typedef typename app::Callable<void(int, int)> BoxUpdateCb;
+class BoxInfo {
+public:
+    int fromRow;
+    int fromCol;
+    int toRow;
+    int toCol;
+    BoxType type;
+};
+
+typedef typename app::Callable<void(const BoxInfo&)> BoxInitCb;
+typedef typename app::Callable<void(const BoxInfo&)> BoxUpdateCb;
+typedef typename app::Callable<void()> BoxWinCb;
 
 class Boxes {
 public:
@@ -29,8 +40,16 @@ public:
     static int getCol();
     
 public:
-    void setCallback(BoxUpdateCb cb) {
-        _cb = cb;
+    void setInitCallback(BoxInitCb cb) {
+        _initCb = cb;
+    }
+    
+    void setUpdateCallback(BoxUpdateCb cb) {
+        _updateCb = cb;
+    }
+    
+    void setWinCallback(BoxWinCb cb) {
+        _winCb = cb;
     }
     
     int getLevel() const {
@@ -45,7 +64,6 @@ public:
     void toNextLevel();
     
     void start();
-    void restart();
     void moveUp();
     void moveDown();
     void moveLeft();
@@ -54,7 +72,9 @@ public:
 public:
     int getManRow();
     int getManCol();
-    BoxType get(int row, int col);
+    BoxType getMap(int row, int col);
+    BoxType getBox(int row, int col);
+    
     char getChar(int row, int col) {
         return _map[row][col];
     }
@@ -70,17 +90,24 @@ public:
 private:
     void loadLevel();
     void moveTo(int manRow, int manCol,
-                int boxRow, int boxCol,
-                int toRow,  int toCol);
-    void swap(int r1, int c1, int r2, int c2);
-    void assign(int row, int col, char type);
-    void moveData(int r1, int c1, int r2, int c2);
+                int to1Row, int to1Col,
+                int to2Row, int to2Col);
+    
+    bool isWall(int row, int col);
+    bool isBox(int row, int col);
+    
+    bool checkWin();
+    void dumpMap();
+    void dumpBox();
     
 private:
     char  _map[GRID_SIZE][GRID_SIZE];
+    char  _box[GRID_SIZE][GRID_SIZE];
     void* _data[GRID_SIZE][GRID_SIZE];
     
-    BoxUpdateCb _cb;
+    BoxInitCb   _initCb;
+    BoxUpdateCb _updateCb;
+    BoxWinCb    _winCb;
     
     int _level;
     int _manRow;

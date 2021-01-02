@@ -1,6 +1,5 @@
 
 #include "push_box.h"
-#include "engine/boxes.h"
 
 static const int box_size = 32;
 static const int box_row = Boxes::getRow();
@@ -8,7 +7,9 @@ static const int box_col = Boxes::getCol();
 
 PushBox::PushBox() : Window(box_col * box_size, box_row * box_size) {
     boxes = new Boxes();
-    boxes->setCallback(app::bind(&PushBox::update, this));
+    boxes->setInitCallback(app::bind(&PushBox::init, this));
+    boxes->setUpdateCallback(app::bind(&PushBox::update, this));
+    boxes->setWinCallback(app::bind(&PushBox::win, this));
 }
 
 PushBox::~PushBox() {
@@ -83,9 +84,16 @@ void PushBox::initStart() {
 }
 
 void PushBox::initGame() {
-    boxes->start();
-    
     _game = new Scene();
+    
+    _fixLayer = new Layer();
+    _boxLayer = new Layer();
+    _manLayer = new Layer();
+    
+    _game->addLayer(_fixLayer);
+    _game->addLayer(_boxLayer);
+    _game->addLayer(_manLayer);
+    
     addScene("game", _game);
 }
 
@@ -113,80 +121,83 @@ void PushBox::initEnd() {
 }
 
 void PushBox::resetGame() {
-    _game->resst();
-    boxes->start();
+    _fixLayer->resst();
+    _boxLayer->resst();
+    _manLayer->resst();
     
-    Layer* backLayer = new Layer();
-    Layer* boxLayer = new Layer();
-    Layer* manLayer = new Layer();
-    _game->addLayer(backLayer);
-    _game->addLayer(boxLayer);
-    _game->addLayer(manLayer);
     for (int row=0; row<box_row; row++) {
         for (int col=0; col<box_col; col++) {
             boxes->setData(row, col, 0);
-            
-            BoxType t = boxes->get(row, col);
-            if (t == BoxTypeBox) {
-                int x = col * box_size;
-                int y = row * box_size;
-                Image* image = new Image();
-                image->setPosition(x, y);
-                image->setSize(box_size, box_size);
-                image->setPath("box.png");
-                image->setAlpha(0.6);
-                boxLayer->addNode(image);
-                boxes->setData(row, col, image);
-            } else if (t == BoxTypeMan) {
-                int x = col * box_size;
-                int y = row * box_size;
-                _man = new Image();
-                _man->setPosition(x, y);
-                _man->setSize(box_size, box_size);
-                _man->setPath("xiaoren.png");
-                manLayer->addNode(_man);
-            } else if (t == BoxTypeBlueWall) {
-                //                int x = col * box_size;
-                //                int y = row * box_size;
-                //                Image* image = new Image();
-                //                image->setPosition(x, y);
-                //                image->setSize(box_size, box_size);
-                //                image->setPath("box.png");
-                //                image->setAlpha(0.2);
-                //                layer->addNode(image);
-                //                boxes->setData(row, col, image);
-            } else if (t == BoxTypeWhiteWall) {
-                int x = col * box_size;
-                int y = row * box_size;
-                Image* image = new Image();
-                image->setPosition(x, y);
-                image->setSize(box_size, box_size);
-                image->setPath("wall.png");
-                backLayer->addNode(image);
-            } else if (t == BoxTypeBall) {
-                int x = col * box_size;
-                int y = row * box_size;
-                Image* image = new Image();
-                image->setPosition(x, y);
-                image->setSize(box_size, box_size);
-                image->setPath("target.png");
-                backLayer->addNode(image);
-            }
+        }
+    }
+    
+    boxes->start();
+    
+    int level = boxes->getLevel();
+    char title[64];
+    sprintf(title, "Box - Level: [%d]", level);
+    setTitle(title);
+}
+
+void PushBox::init(const BoxInfo& info) {
+    BoxType t = info.type;
+    int row = info.fromRow;
+    int col = info.fromCol;
+    if (t == BoxTypeBox) {
+        int x = col * box_size;
+        int y = row * box_size;
+        Image* image = new Image();
+        image->setPosition(x, y);
+        image->setSize(box_size, box_size);
+        image->setPath("box.png");
+        image->setAlpha(0.6);
+        _boxLayer->addNode(image);
+        boxes->setData(row, col, image);
+    } else if (t == BoxTypeMan) {
+        int x = col * box_size;
+        int y = row * box_size;
+        _man = new Image();
+        _man->setPosition(x, y);
+        _man->setSize(box_size, box_size);
+        _man->setPath("xiaoren.png");
+        _manLayer->addNode(_man);
+    } else if (t == BoxTypeWhiteWall) {
+        int x = col * box_size;
+        int y = row * box_size;
+        Image* image = new Image();
+        image->setPosition(x, y);
+        image->setSize(box_size, box_size);
+        image->setPath("wall.png");
+        _boxLayer->addNode(image);
+    } else if (t == BoxTypeBall) {
+        int x = col * box_size;
+        int y = row * box_size;
+        Image* image = new Image();
+        image->setPosition(x, y);
+        image->setSize(box_size, box_size);
+        image->setPath("target.png");
+        _boxLayer->addNode(image);
+    }
+}
+
+void PushBox::update(const BoxInfo& info) {
+    if (info.type == BoxTypeMan) {
+        _man->setPosition(info.toCol * box_size, info.toRow * box_size);
+    } else if (info.type == BoxTypeBox) {
+        int vx = info.toCol * box_size;
+        int vy = info.toRow * box_size;
+        
+        // printf("update [row=%d col=%d][%c]\n", row, col, boxes->getChar(row, col));
+        Image* image = (Image*)boxes->getData(info.fromRow, info.fromCol);
+        if (image) {
+            image->setPosition(vx, vy);
+            boxes->setData(info.fromRow, info.fromCol, 0);
+            boxes->setData(info.toRow,   info.toCol, image);
         }
     }
 }
 
-void PushBox::update(int row, int col) {
-    int vx = col * box_size;
-    int vy = row * box_size;
-    
-    // printf("update [row=%d col=%d][%c]\n", row, col, boxes->getChar(row, col));
-    Image* image = (Image*)boxes->getData(row, col);
-    if (image) {
-        image->setPosition(vx, vy);
-    }
-    
-    int manRow = boxes->getManRow();
-    int manCol = boxes->getManCol();
-    _man->setPosition(manCol * box_size, manRow * box_size);
+void PushBox::win() {
+    boxes->toNextLevel();
+    resetGame();
 }

@@ -116,6 +116,10 @@ namespace app {
         }
     }
     
+    void Window::setTitle(const std::string& title) {
+        glfwSetWindowTitle(_win, title.c_str());
+    }
+    
 }
 
 

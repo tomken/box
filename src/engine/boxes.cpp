@@ -20,7 +20,7 @@ extern const char* all_map;
 #define MAP_ROW  14
 
 Boxes::Boxes() {
-    _level = 2;
+    _level = 1;
 }
 
 Boxes::~Boxes() {
@@ -38,10 +38,6 @@ void Boxes::toNextLevel() {
 }
 
 void Boxes::start() {
-    loadLevel();
-}
-
-void Boxes::restart() {
     loadLevel();
 }
 
@@ -86,19 +82,31 @@ void Boxes::loadLevel() {
         return;
     }
     
+    BoxInfo info;
     p += strlen(key);
     for (int row=0; row<MAP_ROW; row++) {
         for (int col=0; col<MAP_COL; col++) {
-            _map[row][col] = *p;
+            char type = *p;
             
-            if (*p == MAP_MAN) {
+            _map[row][col] = 0;
+            _box[row][col] = 0;
+            
+            if (type == MAP_BACK || type == MAP_WALL || type == MAP_TARGET || type == MAP_SPACE) {
+                _map[row][col] = type;
+            } else if (type == MAP_MAN) {
                 _manRow = row;
                 _manCol = col;
+            } else if (type == MAP_BOX) {
+                _box[row][col] = type;
             }
-            // printf("%c", *p);
+            
+            info.fromRow = row;
+            info.fromCol = col;
+            info.type = (BoxType)(type-MAP_BACK);
+            _initCb(info);
+            
             p++;
         }
-//        printf("\n");
     }
 }
 
@@ -118,115 +126,107 @@ int Boxes::getManCol() {
     return _manCol;
 }
 
-BoxType Boxes::get(int row, int col) {
+BoxType Boxes::getMap(int row, int col) {
     assert(row >= 0 && row < GRID_SIZE);
     assert(col >= 0 && col < GRID_SIZE);
     char v = _map[row][col];
     return (BoxType)(v-MAP_BACK);
 }
 
+BoxType Boxes::getBox(int row, int col) {
+    assert(row >= 0 && row < GRID_SIZE);
+    assert(col >= 0 && col < GRID_SIZE);
+    char v = _box[row][col];
+    return (BoxType)(v-MAP_BACK);
+}
+
 void Boxes::moveTo(int manRow, int manCol,
-                   int boxRow, int boxCol,
-                   int toRow,  int toCol) {
-    char manType = _map[manRow][manCol];
-    char boxType = _map[boxRow][boxCol];
-    char toType  = _map[toRow][toCol];
+                   int to1Row, int to1Col,
+                   int to2Row, int to2Col) {
+    if (isWall(to1Row, to1Col)) {
+        return;
+    }
     
-    // printf("step from=[row=%d col=%d][%c] to=[row=%d col=%d][%c]\n",
-//           manRow, manCol, MAP_MAN,
-//           boxRow, boxCol, boxType);
+    if (isBox(to1Row, to1Col)) {
+        if (isBox(to2Row, to2Col)) {
+            return;
+        }
+        
+        if (isWall(to2Row, to2Col)) {
+            return;
+        }
+        
+        _box[to1Row][to1Col] = 0;
+        _box[to2Row][to2Col] = MAP_BOX;
+        
+        BoxInfo info;
+        info.fromRow = to1Row;
+        info.fromCol = to1Col;
+        info.toRow   = to2Row;
+        info.toCol   = to2Col;
+        info.type    = BoxTypeBox;
+        _updateCb(info);
+        
+        if (checkWin()) {
+            _winCb();
+            return;
+        }
+    }
     
-    if (boxType == MAP_SPACE) {
-        _manRow = boxRow;
-        _manCol = boxCol;
-        assign(boxRow, boxCol, MAP_MAN);
-        assign(manRow, manCol, MAP_SPACE);
-    } else if (boxType == MAP_TARGET) {
-        if (manType == MAP_MAN) {
-            _manRow = boxRow;
-            _manCol = boxCol;
-            assign(manRow, manCol, MAP_SPACE);
-            assign(boxRow, boxCol, MAP_MANTARGET);
-        } else if (manType == MAP_MANTARGET) {
-            _manRow = boxRow;
-            _manCol = boxCol;
-            assign(manRow, manCol, MAP_TARGET);
-            assign(boxRow, boxCol, MAP_MANTARGET);
+    _manRow = to1Row;
+    _manCol = to1Col;
+    BoxInfo info;
+    info.toRow = to1Row;
+    info.toCol = to1Col;
+    info.type  = BoxTypeMan;
+    _updateCb(info);
+}
+
+bool Boxes::isWall(int row, int col) {
+    char v = _map[row][col];
+    return (v == MAP_BACK || v == MAP_WALL);
+}
+
+bool Boxes::isBox(int row, int col) {
+    return (_box[row][col] == MAP_BOX);
+}
+
+bool Boxes::checkWin() {
+    for (int row=0; row<MAP_ROW; row++) {
+        for (int col=0; col<MAP_COL; col++) {
+            char t1 = _map[row][col];
+            char t2 = _box[row][col];
+            if (t1 == MAP_TARGET) {
+                if (t2 != MAP_BOX) {
+                    return false;
+                }
+            }
         }
-    } else if (boxType == MAP_BOX) {
-        if (toType == MAP_SPACE) {
-            _manRow = boxRow;
-            _manCol = boxCol;
-            moveData(boxRow, boxCol, toRow, toCol);
-            if (manType == MAP_MANTARGET)
-                assign(manRow, manCol, MAP_TARGET);
-            else
-                assign(manRow, manCol, MAP_SPACE);
-            assign(boxRow, boxCol, MAP_MAN);
-            assign(toRow, toCol, MAP_BOX);
-        } else if (toType == MAP_TARGET) {
-            _manRow = boxRow;
-            _manCol = boxCol;
-            moveData(boxRow, boxCol, toRow, toCol);
-            assign(manRow, manCol, MAP_SPACE);
-            assign(boxRow, boxCol, MAP_MAN);
-            assign(toRow, toCol, MAP_BOXTARGET);
+    }
+    
+    return true;
+}
+
+void Boxes::dumpMap() {
+    printf("   00 01 02 03 04 05 06 07 08 08 10 11 12 13 14 15\n");
+    printf("   -----------------------------------------------\n");
+    for (int row=0; row<MAP_ROW; row++) {
+        printf("%2d ", row);
+        for (int col=0; col<MAP_COL; col++) {
+            printf("%2d " , _map[row][col]);
         }
-    } else if (boxType == MAP_BOXTARGET) {
-        if (toType == MAP_SPACE) {
-            assign(manRow, manCol, MAP_TARGET);
-            assign(boxRow, boxCol, MAP_MAN);
-        } else if (toType == MAP_TARGET) {
-            _manRow = boxRow;
-            _manCol = boxCol;
-            moveData(boxRow, boxCol, toRow, toCol);
-            assign(manRow, manCol, MAP_SPACE);
-            assign(boxRow, boxCol, MAP_MAN);
-            assign(toRow, toCol, MAP_BOXTARGET);
-        }
+        printf("\n");
     }
 }
 
-void Boxes::swap(int r1, int c1, int r2, int c2) {
-    char t1 = _map[r1][c1];
-    char t2 = _map[r2][c2];
-    
-    _map[r1][c1] = t2;
-    _map[r2][c2] = t1;
-    
-    _cb(r1, c1);
-    _cb(r2, c2);
-}
-
-void Boxes::assign(int row, int col, char type) {
-    char t = _map[row][col];
-    
-    if (type == MAP_MAN) {
-        if (t == MAP_TARGET) {
-            type = MAP_MANTARGET;
+void Boxes::dumpBox() {
+    printf("   00 01 02 03 04 05 06 07 08 08 10 11 12 13 14 15\n");
+    printf("   -----------------------------------------------\n");
+    for (int row=0; row<MAP_ROW; row++) {
+        printf("%2d ", row);
+        for (int col=0; col<MAP_COL; col++) {
+            printf("%2c ", _box[row][col]);
         }
+        printf("\n");
     }
-    
-    if (type == MAP_BOX) {
-        if (t == MAP_TARGET) {
-            type = MAP_BOXTARGET;
-        }
-    }
-    
-    if (type == MAP_SPACE) {
-        if (t == MAP_TARGET) {
-            type = MAP_BOXTARGET;
-        }
-    }
-    
-    _map[row][col] = type;
-    _cb(row, col);
-}
-
-void Boxes::moveData(int r1, int c1, int r2, int c2) {
-    void* d1 = _data[r1][c1];
-    void* d2 = _data[r2][c2];
-    
-    _data[r1][c1] = d2;
-    _data[r2][c2] = d1;
 }
