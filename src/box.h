@@ -8,7 +8,7 @@ using namespace app;
 
 class Box : public Window {
 public:
-    Box(int w, int h);
+    Box();
     ~Box();
     
 public:

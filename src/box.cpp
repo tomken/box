@@ -1,12 +1,12 @@
 
 #include "box.h"
 
-const int boxSize = 64;
-const int col = 15;
-const int row = 10;
-const int count = col * row;
+static const int boxSize = 64;
+static const int col = 15;
+static const int row = 10;
+static const int count = col * row;
 
-Box::Box(int w, int h) : Window(col * boxSize, row * boxSize) {
+Box::Box() : Window(col * boxSize, row * boxSize) {
     clickCount = 0;
 }
 

@@ -13,6 +13,7 @@ namespace app {
         ~Scene();
         
     public:
+        void resst();
         void addLayer(Layer* layer) {
             _layers.push_back(layer);
         }

@@ -15,6 +15,8 @@ namespace app {
         
         void addSprite(Sprite* node);
         
+        void resst();
+        
     public:
         void onDraw(Canvas& canvas);
         

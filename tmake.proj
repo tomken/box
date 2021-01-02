@@ -13,6 +13,7 @@ src_list += tmake_glob(tmake_path('./include/'), '*.h', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.h', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.c', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.cpp', True)
+src_list += tmake_glob(tmake_path('./src/'), '*.hpp', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.cc', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.m', True)
 src_list += tmake_glob(tmake_path('./src/'), '*.mm', True)
@@ -20,8 +21,14 @@ src_list += tmake_glob(tmake_path('./src/'), '*.mm', True)
 h_dirs = []
 h_dirs.append(tmake_path('./include'))
 h_dirs.append(tmake_path('./src'))
+h_dirs.append(tmake_path('./src/app'))
+h_dirs.append(tmake_path('./src/glfw'))
+h_dirs.append(tmake_path('./src/nanovg'))
+h_dirs.append(tmake_path('./src/nlohmann'))
+h_dirs.append(tmake_path('./src/engine'))
+h_dirs.append(tmake_path('./src/timeline'))
 
-flags = ''
+flags = ' -std=c++11 '
 defs = []
 
 if TMAKE_TARGET == "mac":

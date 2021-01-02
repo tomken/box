@@ -1,7 +1,8 @@
 #include "box.h"
+#include "push_box.h"
 
 int main(int argc, char* argv[]) {
-    Box box(600, 400);
+    PushBox box;
     box.run();
 
     return 0;

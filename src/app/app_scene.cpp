@@ -11,6 +11,16 @@ namespace app {
         
     }
     
+    void Scene::resst() {
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); it++) {
+            Layer* layer = *it;
+            delete layer;
+        }
+        
+        _layers.clear();
+    }
+    
     void Scene::onDraw(Canvas& canvas) {
         std::vector<Layer*>::iterator it;
         for (it = _layers.begin(); it != _layers.end(); ++it) {
