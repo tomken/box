@@ -11,3 +11,5 @@ Is my game framework, for peter
 - [**JSON**](https://github.com/nlohmann/json.git) 
 
 - [**Box2d-lite**](https://github.com/erincatto/box2d-lite.git) 
+
+- [**Gomoku AI**](https://github.com/gomoku/Carbon-Gomoku.git) for Gomoku game
