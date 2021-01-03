@@ -30,6 +30,8 @@ void Five::onPress(int x, int y) {
 }
 
 void Five::onMove(int x, int y) {
+    if (isFinished) return;
+    
     int cx, cy;
     if (getXY(x, y, cx, cy)) {
         showLocation(cx, cy);
@@ -49,7 +51,9 @@ void Five::onRelease(int x, int y) {
         }
     } else if (currentScene() == _game) {
         if (isFinished) {
-            resetGame();
+            if (_restart->inBounds(x, y)) {
+                resetGame();
+            }
         } else {
             int cx, cy;
             if (getXY(x, y, cx, cy)) {
@@ -156,23 +160,19 @@ void Five::initGame() {
     top->addNode(_restart);
     
     _winer = new Image();
-    _winer->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _winer->setPosition(grid_v_r + 10, grid_v_b - 230);
     _winer->setSize(260, 230);
     _winer->setPath("five_win_y.png");
-    _winer->setAlpha(0);
-    _winer->setVisiable(false);
     top->addNode(_winer);
     
     _loser = new Image();
-    _loser->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _loser->setPosition(grid_v_r + 10, grid_v_b - 230);
     _loser->setSize(260, 230);
     _loser->setPath("five_los_y.png");
-    _loser->setAlpha(0);
-    _loser->setVisiable(false);
     top->addNode(_loser);
     
     _locate = new Image();
-    _locate->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _locate->setPosition(0, 0);
     _locate->setSize(piece_s, piece_s);
     _locate->setPath("five_select.png");
     top->addNode(_locate);
@@ -267,14 +267,11 @@ void Five::doThinking() {
 
 void Five::onChessMove(int x, int y) {
     game.player() == OP ? oTimer.stop() : xTimer.stop();
-    
     game.move(x, y);
     addPiece(x, y, currPlayer);
     showLocation(x, y);
     
-    if (game.finished())
-    {
-        // InvalidateRect(hWnd, 0, 1);
+    if (game.finished()) {
         char info[256] = "The winner is:\n";
         char buf[256];
         strcat(info, currPlayer == 0 ? "Human" : currPlayer->name());
@@ -285,7 +282,7 @@ void Five::onChessMove(int x, int y) {
         sprintf(buf, "X TIME = %.3lf", xTimer.time());
         strcat(info, buf);
         
-        showResult(false);
+        showResult(!currPlayer);
         
         delete playerO;
         delete playerX;
@@ -303,8 +300,7 @@ void Five::onChessMove(int x, int y) {
 }
 
 void Five::onManMove(int cx, int cy) {
-    if (game.finished() || currPlayer != 0 || game.cell(cx, cy) != EMPTY) {
-        showResult(true);
+    if (game.cell(cx, cy) != EMPTY) {
         return;
     }
     
@@ -331,10 +327,10 @@ void Five::addPiece(int cx, int cy, bool isAi) {
     image->setPosition(x, y);
     image->setSize(piece_s, piece_s);
     image->setPath(img);
-    image->setAlpha(0.0f);
+    image->setAlpha(1.0f);
     _grid->addNode(image);
     
-    image->fadeIn();
+    // image->fadeIn();
 }
 
 void Five::showResult(bool isYourWin) {
