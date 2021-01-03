@@ -11,36 +11,54 @@ namespace app {
         return uuid;
     }
     
-    tl::AnimatorBase* Node::fadeIn() {
-        return 0;
-    }
-    
-    tl::AnimatorBase* Node::fadeOut() {
+    void Node::fadeIn() {
         tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this);
-        animator->setValues(1.0, 0.0);
+        if (!animator->isFinished())
+            return;
+            
+        animator->setValues(0.0, 1.0);
         animator->addObserver(this);
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeAlpha);
         animator->setUserData((void*)0x1010);
-        return animator;
+        context().runAnimation(animator);
     }
     
-    tl::AnimatorBase* Node::rotationTo(int angle) {
+    void Node::fadeOut(float to) {
+        tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this);
+        if (!animator->isFinished())
+            return;
+        
+        animator->setValues(1.0, to);
+        animator->addObserver(this);
+        animator->setDuration(200);
+        animator->setType(tl::AnimationTypeAlpha);
+        animator->setUserData((void*)0x1010);
+        context().runAnimation(animator);
+    }
+    
+    void Node::rotationTo(int angle) {
         tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this, tl::AnimationTypeRotation);
+        if (!animator->isFinished())
+            return;
+        
         animator->setValues(_angle, angle);
         animator->addObserver(this);
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeRotation);
-        return animator;
+        context().runAnimation(animator);
     }
     
-    tl::AnimatorBase* Node::animate(tl::AnimationType type, float from, float to, int duration) {
+    void Node::animate(tl::AnimationType type, float from, float to, int duration) {
         tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this, type);
+        if (!animator->isFinished())
+            return;
+        
         animator->setValues(from, to);
         animator->addObserver(this);
         animator->setDuration(duration);
         animator->setType(type);
-        return animator;
+        context().runAnimation(animator);
     }
     
     void Node::onAnimatorBegin(tl::AnimatorBase* animator) {
@@ -66,7 +84,7 @@ namespace app {
     
     void Node::onAnimatorEnd(tl::AnimatorBase* animator) {
         if (animator->type() == tl::AnimationTypeAlpha) {
-            setVisiable(true);
+            // setVisiable(true);
         }
     }
 }

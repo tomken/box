@@ -30,16 +30,35 @@ void Five::onPress(int x, int y) {
 }
 
 void Five::onMove(int x, int y) {
+    int cx, cy;
+    if (getXY(x, y, cx, cy)) {
+        showLocation(cx, cy);
+    }
 }
 
 void Five::onRelease(int x, int y) {
     if (currentScene() == _start) {
-        resetGame();
-        changeScene("game");
+        if (_first->inBounds(x, y)) {
+            isFirst = true;
+            resetGame();
+            changeScene("game");
+        } else if (_last->inBounds(x, y)) {
+            isFirst = false;
+            resetGame();
+            changeScene("game");
+        }
     } else if (currentScene() == _game) {
-        int cx, cy;
-        if (getXY(x, y, cx, cy)) {
-            onManMove(cx, cy);
+        if (isFinished) {
+            resetGame();
+        } else {
+            int cx, cy;
+            if (getXY(x, y, cx, cy)) {
+                onManMove(cx, cy);
+            } else {
+                if (_restart->inBounds(x, y)) {
+                    resetGame();
+                }
+            }
         }
     } else if (currentScene() == _end) {
         changeScene("menu");
@@ -50,12 +69,10 @@ void Five::onKeyPress(int key) {
 }
 
 void Five::onCreate() {
-//    Color c(192, 202, 51);
-//    setBackgroundColor(c);
-    
+    isFirst    = false;
     aiThinking = false;
     playerO = playerX = currPlayer = 0;
-    iPlayerO = 2; iPlayerX = 0;
+    iPlayerO = 1; iPlayerX = 0;
     
     initStart();
     initGame();
@@ -72,20 +89,32 @@ void Five::initStart() {
     _start = new Scene();
     Layer* layer = new Layer();
     
-    Shape* shape = new Shape();
-    shape->setPosition(0, 0);
-    shape->setSize(_width, _height);
-    shape->setFillColor(Color::White);
-    layer->addNode(shape);
+//    Shape* shape = new Shape();
+//    shape->setPosition(0, 0);
+//    shape->setSize(_width, _height);
+//    shape->setFillColor(Color::White);
+//    layer->addNode(shape);
     
     int x = (_width  - 280) / 2;
-    int y = (_height - 325) / 2;
+    int y = (_height - 325) / 2 - 100;
     
     Image* image = new Image();
     image->setPosition(x, y);
     image->setSize(280, 325);
     image->setPath("begin.png");
     layer->addNode(image);
+    
+    _first = new Image();
+    _first->setPosition((_width - 115)/2 - 100, _height - 200);
+    _first->setSize(115, 68);
+    _first->setPath("five_first.png");
+    layer->addNode(_first);
+    
+    _last = new Image();
+    _last->setPosition((_width - 115)/2 + 100, _height - 200);
+    _last->setSize(115, 68);
+    _last->setPath("five_last.png");
+    layer->addNode(_last);
     
     _start->addLayer(layer);
     addScene("menu", _start);
@@ -104,13 +133,51 @@ void Five::initGame() {
     Image* grid = new Image();
     grid->setPosition(grid_x, grid_x);
     grid->setSize(grid_s, grid_s);
+    grid->setAlpha(0.5);
     grid->setPath("five_chessboard.jpg");
     layer->addNode(grid);
     
     _game->addLayer(layer);
     
+//    mage* bg = new Image();
+//    bg->setPosition(0, 0);
+//    bg->setSize(_width, _height);
+//    bg->setPath("five_background.jpg");
+//    layer->addNode(bg);
+    
     _grid = new Layer();
     _game->addLayer(_grid);
+    
+    Layer* top = new Layer();
+    _restart = new Image();
+    _restart->setPosition(grid_v_r + 100, grid_v_t);
+    _restart->setSize(113, 64);
+    _restart->setPath("five_begin.png");
+    top->addNode(_restart);
+    
+    _winer = new Image();
+    _winer->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _winer->setSize(260, 230);
+    _winer->setPath("five_win_y.png");
+    _winer->setAlpha(0);
+    _winer->setVisiable(false);
+    top->addNode(_winer);
+    
+    _loser = new Image();
+    _loser->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _loser->setSize(260, 230);
+    _loser->setPath("five_los_y.png");
+    _loser->setAlpha(0);
+    _loser->setVisiable(false);
+    top->addNode(_loser);
+    
+    _locate = new Image();
+    _locate->setPosition((_width - 260) / 2, (_height - 230) / 2);
+    _locate->setSize(piece_s, piece_s);
+    _locate->setPath("five_select.png");
+    top->addNode(_locate);
+    
+    _game->addLayer(top);
     
     addScene("game", _game);
 }
@@ -139,11 +206,13 @@ void Five::initEnd() {
 }
 
 void Five::resetGame() {
-    _grid->resst();
+    _winer->setAlpha(0.0f);
+    _winer->setVisiable(false);
+    _loser->setAlpha(0.0f);
+    _loser->setVisiable(false);
+    isFinished = false;
     
-//    for (int i=0; i<boardSize; i++) {
-//        addPiece(i, i, true);
-//    }
+    _grid->resst();
     
     newPlayer(playerO, iPlayerO);
     newPlayer(playerX, iPlayerX);
@@ -155,7 +224,12 @@ void Five::resetGame() {
     xTimer.reset(); oTimer.start();
     
     game.start(boardSize);
-    currPlayer = playerO;
+    
+    if (isFirst) {
+        currPlayer = playerX;
+    } else {
+        currPlayer = playerO;
+    }
     
     startThinking();
 }
@@ -194,10 +268,9 @@ void Five::doThinking() {
 void Five::onChessMove(int x, int y) {
     game.player() == OP ? oTimer.stop() : xTimer.stop();
     
-    // InvalidateCell(hWnd, game.lastMove().x, game.lastMove().y);
     game.move(x, y);
-    // InvalidateCell(hWnd, x, y);
     addPiece(x, y, currPlayer);
+    showLocation(x, y);
     
     if (game.finished())
     {
@@ -212,8 +285,8 @@ void Five::onChessMove(int x, int y) {
         sprintf(buf, "X TIME = %.3lf", xTimer.time());
         strcat(info, buf);
         
-        // TODO: 
-        // MessageBox(hWnd, info, "Game Over", MB_ICONINFORMATION);
+        showResult(false);
+        
         delete playerO;
         delete playerX;
         playerO = 0;
@@ -231,7 +304,7 @@ void Five::onChessMove(int x, int y) {
 
 void Five::onManMove(int cx, int cy) {
     if (game.finished() || currPlayer != 0 || game.cell(cx, cy) != EMPTY) {
-        // TODO: win
+        showResult(true);
         return;
     }
     
@@ -253,10 +326,31 @@ bool Five::getXY(int x, int y, int& cx, int& cy) {
 void Five::addPiece(int cx, int cy, bool isAi) {
     int x = cx * piece_s + grid_v_l;
     int y = cy * piece_s + grid_v_t;
-    const char* img = isAi ? "five_b.png" : "five_w.png";
+    const char* img = isAi ? "five_b2.png" : "five_w2.png";
     Image* image = new Image();
     image->setPosition(x, y);
     image->setSize(piece_s, piece_s);
     image->setPath(img);
+    image->setAlpha(0.0f);
     _grid->addNode(image);
+    
+    image->fadeIn();
+}
+
+void Five::showResult(bool isYourWin) {
+    if (isYourWin) {
+        _winer->setVisiable(true);
+        _winer->fadeIn();
+    } else {
+        _loser->setVisiable(true);
+        _loser->fadeIn();
+    }
+    
+    isFinished = true;
+}
+
+void Five::showLocation(int cx, int cy) {
+    int x = cx * piece_s + grid_v_l;
+    int y = cy * piece_s + grid_v_t;
+    _locate->setPosition(x, y);
 }

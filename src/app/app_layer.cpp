@@ -3,6 +3,14 @@
 
 namespace app {
     
+    void Layer::updateContext(AppContext* ctx) {
+        _ctx = ctx;
+        std::vector<Node*>::iterator it;
+        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+            (*it)->updateContext(ctx);
+        }
+    }
+    
     void Layer::resst() {
         std::vector<Node*>::iterator it;
         for (it = _nodes.begin(); it != _nodes.end(); it++) {

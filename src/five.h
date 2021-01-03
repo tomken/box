@@ -43,12 +43,22 @@ private:
     void onManMove(int cx, int cy);
     bool getXY(int x, int y, int& cx, int& cy);
     void addPiece(int cx, int cy, bool isAi);
+    void showResult(bool isYourWin);
+    void showLocation(int cx, int cy);
     
 private:
     Scene*  _start;
+    Image*  _first;
+    Image*  _last;
+    
     Scene*  _game;
     Scene*  _end;
+    
     Layer*  _grid;
+    Image*  _winer;
+    Image*  _loser;
+    Image*  _locate;
+    Image*  _restart;
     
 private:
     OXGame    game;
@@ -59,6 +69,8 @@ private:
     
     Timer     oTimer, xTimer;
     bool      aiThinking;
+    bool      isFinished;
+    bool      isFirst;
 };
 
 #endif // __FIVE_H__

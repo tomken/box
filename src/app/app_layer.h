@@ -10,17 +10,20 @@ namespace app {
     class Layer {
     public:
         void addNode(Node* node) {
+            node->updateContext(_ctx);
             _nodes.push_back(node);
         }
         
         void addSprite(Sprite* node);
         
+        void updateContext(AppContext* ctx);
         void resst();
         
     public:
         void onDraw(Canvas& canvas);
         
     private:
+        AppContext*        _ctx;
         std::vector<Node*> _nodes;
     };
     

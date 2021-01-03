@@ -1,6 +1,6 @@
 
-#ifndef __CANVAS_H__
-#define __CANVAS_H__
+#ifndef __APP_CANVAS_H__
+#define __APP_CANVAS_H__
 
 #include "app_color.h"
 
@@ -104,4 +104,4 @@ namespace app {
     
 }
 
-#endif // __CANVAS_H__
+#endif // __APP_CANVAS_H__

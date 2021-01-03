@@ -44,7 +44,7 @@ namespace app {
         }
         
         if (_image > 0) {
-            // _paint.setAlpha(_alpha);
+            _paint.setAlpha(_alpha);
             
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);

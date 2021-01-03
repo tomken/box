@@ -12,6 +12,8 @@
 
 #include "tl_interpolator.h"
 
+extern uint64_t getTickCount();
+
 namespace tl {
     
     enum AnimationType {
@@ -154,8 +156,8 @@ namespace tl {
             _isFinished   = true;
             _duration     = 200;
             _delay        = 0;
-            _startTime    = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
-            _curTime      = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
+            _startTime    = getTickCount();
+            _curTime      = getTickCount();
             _from         = T();
             _calcFrom     = _from;
             _playing      = false;
@@ -220,8 +222,8 @@ namespace tl {
             _calcFrom   = _from;
             _calcTo     = _to;
             
-            _curTime   = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
-            _startTime = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
+            _curTime   = getTickCount();
+            _startTime = getTickCount();
             
             _isFinished = false;
             
@@ -295,7 +297,7 @@ namespace tl {
         
     private:
         void nextCurTime() {
-            _curTime = glfwGetTime(); // asl::TimeUtils::getTickCountUS();
+            _curTime = getTickCount();
             needVSync(0);
         }
         

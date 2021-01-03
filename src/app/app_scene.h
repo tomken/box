@@ -8,13 +8,16 @@ namespace app {
     
     class Canvas;
     class Scene {
+        friend class Window;
     public:
         Scene();
         ~Scene();
         
     public:
+        void updateContext(AppContext* ctx);
         void resst();
         void addLayer(Layer* layer) {
+            layer->updateContext(_ctx);
             _layers.push_back(layer);
         }
         
@@ -22,6 +25,7 @@ namespace app {
         void onDraw(Canvas& canvas);
         
     private:
+        AppContext*           _ctx;
         std::vector<Layer*>  _layers;
         
     };

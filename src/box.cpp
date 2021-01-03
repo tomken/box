@@ -29,7 +29,7 @@ void Box::onMove(int x, int y) {
         int index;
         convert2index(x, y, index);
         Image* box = _boxs[index];
-        box->setAlpha(0.6);
+        box->fadeOut(0.6);
         
         if (renIndex == index) {
             changeScene("end");
@@ -46,7 +46,7 @@ void Box::onRelease(int x, int y) {
         int index;
         convert2index(x, y, index);
         Image* box = _boxs[index];
-        box->setAlpha(0.6);
+        box->fadeOut(0.6);
         
         if (renIndex == index) {
             changeScene("end");

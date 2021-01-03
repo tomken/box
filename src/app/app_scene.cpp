@@ -11,6 +11,14 @@ namespace app {
         
     }
     
+    void Scene::updateContext(AppContext* ctx) {
+        _ctx = ctx;
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); it++) {
+            (*it)->updateContext(ctx);
+        }
+    }
+    
     void Scene::resst() {
         std::vector<Layer*>::iterator it;
         for (it = _layers.begin(); it != _layers.end(); it++) {

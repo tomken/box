@@ -5,6 +5,7 @@
 #include "../glfw/glad/gl.h"
 #include "../glfw/glfw3.h"
 
+#include "app_context.h"
 #include "app_canvas.h"
 #include "app_scene.h"
 
@@ -12,13 +13,14 @@
 
 namespace app {
 
-    class Window : public tl::AnimatorCallback {
+    class Window : public AppContext, public tl::AnimatorCallback {
     public:
         Window(int w, int h);
         virtual ~Window();
         
     public:
         void addScene(const std::string& name, Scene* scene) {
+            scene->updateContext(this);
             _scenes[name] = scene;
         }
         
@@ -39,7 +41,6 @@ namespace app {
             _bgB = (float)color.blue() / 255;
             _bgA = (float)color.alpha() / 255;
         }
-        void requestRefresh();
         
     public:
         virtual void onCreate() = 0;
@@ -52,10 +53,6 @@ namespace app {
         virtual void onDraw(Canvas& canvas) {;}
         
     protected:
-        tl::AnimatorManager& animator() {
-            return *_animator;
-        }
-        
         void alphaTo(float alpha);
         void rotationTo(const app::UUID& uuid, float from, float to);
         void scaleTo(float angle);
@@ -63,6 +60,13 @@ namespace app {
     private: // for AnimatorCallback
         virtual void requestVSync(int32_t delay);
         virtual void onAnimatorRange(app::UUID uuid, const tl::AnimationInfo& info) {;}
+        
+    private: // for AppContext
+        virtual void requestRefresh();
+        virtual void runAnimation(tl::AnimatorBase*);
+        
+    private:
+        void runAllAnimation();
         
     protected:
         int         _width;
@@ -77,8 +81,10 @@ namespace app {
         float       _bgB;
         float       _bgA;
         
-        tl::AnimatorManager* _animator;
+        std::set<tl::AnimatorBase*> _animatoies;
+        
         bool                 _isPlaying;
+        bool                 _isRequesed;
         
         Scene*      _scene;
         std::map<std::string, Scene*> _scenes;

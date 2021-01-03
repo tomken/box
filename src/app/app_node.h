@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 
+#include "app_context.h"
 #include "app_canvas.h"
 #include "app_uuid.h"
 
@@ -40,6 +41,14 @@ namespace app {
         }
         
     public:
+        AppContext& context() {
+            return *_ctx;
+        }
+        
+        void updateContext(AppContext* ctx) {
+            _ctx = ctx;
+        }
+        
         void setPositionX(float x) {
             _x = x * X_SCALE;
         }
@@ -82,11 +91,17 @@ namespace app {
             return _visiable;
         }
         
+        bool inBounds(int x, int y) {
+            x *= X_SCALE;
+            y *= Y_SCALE;
+            return (x > _x && x < (_x + _w)) && (y > _y && y < (_y + _h));
+        }
+        
     public: // for animator
-        tl::AnimatorBase* fadeIn();
-        tl::AnimatorBase* fadeOut();
-        tl::AnimatorBase* rotationTo(int angle);
-        tl::AnimatorBase* animate(tl::AnimationType type, float from, float to, int duration);
+        void fadeIn();
+        void fadeOut(float to = 0.0f);
+        void rotationTo(int angle);
+        void animate(tl::AnimationType type, float from, float to, int duration);
         
     public:
         virtual void onDraw(Canvas& canvas) {;}
@@ -98,6 +113,7 @@ namespace app {
         virtual void onAnimatorCancel(tl::AnimatorBase*) {;}
         
     protected:
+        AppContext* _ctx;
         UUID  _uuid;
         float _x;
         float _y;

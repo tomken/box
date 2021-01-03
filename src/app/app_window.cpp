@@ -77,13 +77,14 @@ namespace app {
         _bgB = 0.3f;
         _bgA = 1.0f;
         
+        _isRequesed = false;
+        _isPlaying  = false;
+        
         _canvas = new Canvas();
-        _animator = new tl::AnimatorManager(this);
     }
     
     Window::~Window() {
         delete _canvas;
-        delete _animator;
         
         glfwDestroyWindow(_win);
         glfwTerminate();
@@ -94,6 +95,8 @@ namespace app {
         onCreate();
         
         while (!glfwWindowShouldClose(_win)) {
+            _isRequesed = false;
+            
             int width, height;
             glfwGetFramebufferSize(_win, &width, &height);
             const float ratio = width / (float) height;
@@ -103,6 +106,8 @@ namespace app {
             glViewport(0, 0, width, height);
             glClearColor(_bgR, _bgG, _bgB, _bgA);
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+            
+            runAllAnimation();
             
             if (_scene) {
                 _canvas->begin(width, height, ratio);
@@ -127,10 +132,6 @@ namespace app {
         glfwSetWindowTitle(_win, title.c_str());
     }
     
-    void Window::requestRefresh() {
-        glfwPostEmptyEvent();
-    }
-    
     void Window::requestVSync(int32_t delay) {
         requestRefresh();
     }
@@ -144,8 +145,41 @@ namespace app {
         info.type = tl::AnimationTypeRotation;
         info.tag  = "man_rotation";
         
-        _animator->makeAnimator(uuid, info);
-        _animator->play();
+//        _animator->makeAnimator(uuid, info);
+//        _animator->play();
+    }
+    
+    void Window::requestRefresh() {
+        if (!_isRequesed) {
+            _isRequesed = true;
+            glfwPostEmptyEvent();
+        }
+    }
+    
+    void Window::runAnimation(tl::AnimatorBase* ai) {
+        ai->start();
+        _animatoies.insert(ai);
+        
+        requestRefresh();
+    }
+    
+    void Window::runAllAnimation() {
+        std::set<tl::AnimatorBase*>::iterator it;
+        for (it = _animatoies.begin(); it != _animatoies.end();) {
+            tl::AnimatorBase* a = (*it);
+            a->run();
+            
+            if (a->isFinished()) {
+                _animatoies.erase(it++);
+            } else {
+                it++;
+            }
+        }
+        
+        _isPlaying = _animatoies.size() > 0;
+        if (_isPlaying) {
+            requestRefresh();
+        }
     }
 
 }
