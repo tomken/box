@@ -1,8 +1,8 @@
 
 #include <stdint.h>
 
-extern uint64_t getTickCount();
+extern uint64_t getTickCountUS();
 
 long getTime() {
-    return (long)getTickCount();
+    return (long)getTickCountUS();
 }

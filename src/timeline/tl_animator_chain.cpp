@@ -2,6 +2,8 @@
 #include "tl_animator_chain.h"
 #include "tl_animator.h"
 
+#include <assert.h>
+
 namespace tl {
 
     AnimatorItem::~AnimatorItem() {

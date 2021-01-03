@@ -12,7 +12,7 @@
 
 #include "tl_interpolator.h"
 
-extern uint64_t getTickCount();
+extern uint64_t getTickCountUS();
 
 namespace tl {
     
@@ -156,8 +156,8 @@ namespace tl {
             _isFinished   = true;
             _duration     = 200;
             _delay        = 0;
-            _startTime    = getTickCount();
-            _curTime      = getTickCount();
+            _startTime    = getTickCountUS();
+            _curTime      = getTickCountUS();
             _from         = T();
             _calcFrom     = _from;
             _playing      = false;
@@ -222,8 +222,8 @@ namespace tl {
             _calcFrom   = _from;
             _calcTo     = _to;
             
-            _curTime   = getTickCount();
-            _startTime = getTickCount();
+            _curTime   = getTickCountUS();
+            _startTime = getTickCountUS();
             
             _isFinished = false;
             
@@ -297,7 +297,7 @@ namespace tl {
         
     private:
         void nextCurTime() {
-            _curTime = getTickCount();
+            _curTime = getTickCountUS();
             needVSync(0);
         }
         

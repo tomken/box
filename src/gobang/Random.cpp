@@ -12,10 +12,10 @@ static uint32_t seed;
 // We can't use standard function rand() from stdlib because it does not work.
 // It returns same value for every move because OXMain.cpp creates new thread for every move.
 
-extern uint64_t getTickCount();
+extern uint64_t getTickCountUS();
 void _randomize()
 {
-  seed = getTickCount();
+  seed = getTickCountUS();
 }
 
 unsigned _random(unsigned x)
