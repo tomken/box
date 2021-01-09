@@ -41,6 +41,7 @@ namespace link {
         void randomLevel();
         bool match(const Point& a, const Point& b);
         bool checkFinished();
+        bool checkSolution();
         
         MatchType matchType() const {
             return _matchType;

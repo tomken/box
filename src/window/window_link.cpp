@@ -4,7 +4,7 @@
 namespace link {
     
     static const int box_w = 35;
-    static const int box_h = 39;
+    static const int box_h = 40;
     static const int box_row = Engine::getRow();
     static const int box_col = Engine::getCol();
     static const int grid_l = 0;
@@ -170,7 +170,7 @@ namespace link {
                     
                     Image* icon = new Image();
                     icon->setPosition(x + 2, y);
-                    icon->setSize(31, box_h);
+                    icon->setSize(box_w, box_h);
                     icon->setPath("link/iconList.png");
                     icon->setImageOffset(node.number*31, 0);
                     _boxLayer->addNode(icon);
@@ -186,7 +186,7 @@ namespace link {
         // select box rgb(198, 40, 40)
         _select = new Shape();
         _select->setPosition(2*box_w + grid_l + 2, 2*box_h + grid_t);
-        _select->setSize(31, box_h);
+        _select->setSize(box_w, box_h);
         _select->setStrokeColor(Color::Brown);
         _select->setStrokeWidth(4);
         _select->setFillColor(Color(198, 40, 40, 100));
