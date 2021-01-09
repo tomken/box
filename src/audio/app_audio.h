@@ -4,6 +4,19 @@
 
 #include <stdint.h>
 
+#define AUDIO_MASK_BITSIZE       (0xFF)
+#define AUDIO_MASK_DATATYPE      (1<<8)
+#define AUDIO_MASK_ENDIAN        (1<<12)
+#define AUDIO_MASK_SIGNED        (1<<15)
+#define AUDIO_BITSIZE(x)         (x & AUDIO_MASK_BITSIZE)
+#define AUDIO_ISFLOAT(x)         (x & AUDIO_MASK_DATATYPE)
+#define AUDIO_ISBIGENDIAN(x)     (x & AUDIO_MASK_ENDIAN)
+#define AUDIO_ISSIGNED(x)        (x & AUDIO_MASK_SIGNED)
+#define AUDIO_ISINT(x)           (!AUDIO_ISFLOAT(x))
+#define AUDIO_ISLITTLEENDIAN(x)  (!AUDIO_ISBIGENDIAN(x))
+#define AUDIO_ISUNSIGNED(x)      (!AUDIO_ISSIGNED(x))
+
+
 /**
  *  \name Audio format flags
  *

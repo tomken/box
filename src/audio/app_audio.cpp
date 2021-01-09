@@ -48,6 +48,30 @@ AudioFormat FirstAudioFormat(AudioFormat format) {
     return NextAudioFormat();
 }
 
+uint8_t SilenceValueForFormat(const AudioFormat format)
+{
+    switch (format) {
+        /* !!! FIXME: 0x80 isn't perfect for U16, but we can't fit 0x8000 in a
+           !!! FIXME:  byte for memset() use. This is actually 0.1953 percent
+           !!! FIXME:  off from silence. Maybe just don't use U16. */
+    case AUDIO_U16LSB:
+    case AUDIO_U16MSB:
+    case AUDIO_U8:
+        return 0x80;
+
+    default: break;
+    }
+
+    return 0x00;
+}
+
+void CalculateAudioSpec(app::AudioSpec* spec) {
+    spec->silence = SilenceValueForFormat(spec->format);
+    spec->size = AUDIO_BITSIZE(spec->format) / 8;
+    spec->size *= spec->channels;
+    spec->size *= spec->samples;
+}
+
 static void play_callbacke(void *arg, uint8_t* stream, int len) {
     
 }
@@ -68,7 +92,7 @@ namespace app {
     }
     
     void Audio::start() {
-        platform_audio_start(this);
+        //platform_audio_start(this);
     }
     
     void Audio::pause() {
@@ -80,11 +104,11 @@ namespace app {
     }
     
     void Audio::stop() {
-        platform_audio_stop(this);
+        //platform_audio_stop(this);
     }
     
     void Audio::init() {
-        platform_audio_init(this);
+        //platform_audio_init(this);
     }
     
 }
