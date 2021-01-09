@@ -29,7 +29,7 @@ namespace app {
             _scale    = 1.0;
             _angle    = 0;
         }
-        virtual ~Node() {;}
+        virtual ~Node();
         
     public:
         const UUID& uuid() const {

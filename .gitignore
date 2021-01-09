@@ -3,3 +3,4 @@ publish/
 project/
 local_export/
 .DS_Store
+.vscode/

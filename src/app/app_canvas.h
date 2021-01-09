@@ -50,8 +50,9 @@ namespace app {
         
         Paint createImagePattern(int image);
         Paint createImagePattern(int image, float w, float h);
-        Paint createImagePattern(float ox, float oy, float ex, float ey,
-                                 float angle, int image, float alpha);
+        Paint createImagePatternO(int image, float ox, float oy);
+        Paint createImagePattern(int image, float ox, float oy, float ex, float ey,
+                                 float angle, float alpha);
         
     public:
         int loadImage(const std::string& path);
@@ -91,6 +92,9 @@ namespace app {
         void translate(float x, float y);
         void rotate(float angle);
         void scale(float x, float y);
+        void clip(float x, float y, float w, float h) {
+            nvgScissor(vg, x, y, w, h);
+        }
         
     private:
         void begin(int w, int h, float ratio);

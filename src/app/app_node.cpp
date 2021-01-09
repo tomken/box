@@ -11,6 +11,11 @@ namespace app {
         return uuid;
     }
     
+    Node::~Node() {
+        tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this);
+        animator->removeObserver(this);
+    }
+    
     void Node::fadeIn() {
         tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this);
         if (!animator->isFinished())

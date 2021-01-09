@@ -69,8 +69,21 @@ namespace app {
         return paint;
     }
     
-    Paint Canvas::createImagePattern(float ox, float oy, float ex, float ey,
-                                     float angle, int image, float alpha) {
+    Paint Canvas::createImagePatternO(int image, float ox, float oy) {
+        Paint paint;
+        if (image == 0)
+            return paint;
+        
+        int w;
+        int h;
+        nvgImageSize(vg, image, &w, &h);
+        paint._paint = nvgImagePattern(vg, ox, oy,
+                                       w * X_SCALE, h * X_SCALE, 0.0f, image, 1);
+        return paint;
+    }
+    
+    Paint Canvas::createImagePattern(int image, float ox, float oy, float ex, float ey,
+                                     float angle, float alpha) {
         Paint paint;
         paint._paint = nvgImagePattern(vg, ox, oy, ex, ey, angle, image, alpha);
         return paint;

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
 # 以下内容为python语法
@@ -7,26 +7,32 @@ def remove_src(str, list):
     if str in src:
       list.remove(src)
 
-# 指定编译的源码
-src_list = []
-src_list += tmake_glob(tmake_path('./include/'), '*.h', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.h', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.c', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.cpp', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.hpp', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.cc', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.m', True)
-src_list += tmake_glob(tmake_path('./src/'), '*.mm', True)
+folders = ['app', 'window', 'os', 'audio', 'glfw', 'nanovg']
+folders.append('timeline')
+folders.append('quickjs')
+folders.append('box2d-lite')
+folders.append('engine')
+folders.append('gobang')
 
+folders.append('platform/' + TMAKE_TARGET)
+
+# 指定编译的源码
 h_dirs = []
-h_dirs.append(tmake_path('./include'))
 h_dirs.append(tmake_path('./src'))
-h_dirs.append(tmake_path('./src/app'))
-h_dirs.append(tmake_path('./src/glfw'))
-h_dirs.append(tmake_path('./src/nanovg'))
-h_dirs.append(tmake_path('./src/nlohmann'))
-h_dirs.append(tmake_path('./src/engine'))
-h_dirs.append(tmake_path('./src/timeline'))
+
+src_list = []
+src_list.append('./src/main.cpp')
+
+for folder in folders:
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.h', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.c', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.cpp', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.hpp', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.cc', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.m', True)
+  src_list += tmake_glob(tmake_path('./src/' + folder), '*.mm', True)
+
+  h_dirs.append(tmake_path('./src/' + folder))
 
 flags = ' -std=c++11 '
 defs = []
@@ -37,6 +43,8 @@ if TMAKE_TARGET == "mac":
   flags += ' -framework IOKit '
   flags += ' -framework CoreFoundation '
   flags += ' -framework OpenGL '
+  flags += ' -framework CoreAudio '
+  flags += ' -framework AudioToolbox '
   remove_src("win32_", src_list)
   remove_src("wgl_context", src_list)
 

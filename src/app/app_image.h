@@ -19,10 +19,22 @@ namespace app {
             _path = path;
         }
         
+        void setImageOffset(int x, int y) {
+            _imageX = x * X_SCALE;
+            _imageY = y * X_SCALE;
+            _imageF = true;
+        }
+        
     private:
         std::string _path;
         int         _image;
         Paint       _paint;
+        
+        int         _imageX;
+        int         _imageY;
+        int         _imageW;
+        int         _imageH;
+        bool        _imageF;
         
     };
     

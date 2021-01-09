@@ -5,7 +5,12 @@
 namespace app {
     
     Image::Image() {
-        _image = 0;
+        _image  = 0;
+        _imageX = 0;
+        _imageY = 0;
+        _imageW = 0;
+        _imageH = 0;
+        _imageF = false;
     }
     
     Image::~Image() {
@@ -39,13 +44,18 @@ namespace app {
         if (_image == 0) {
             _image = canvas.loadImage(_path);
             if (_image > 0) {
-                _paint = canvas.createImagePattern(_image, _w, _h);
+                if (_imageF) {
+                    _paint = canvas.createImagePatternO(_image, -_imageX, _imageY);
+                } else {
+                    _paint = canvas.createImagePattern(_image, _w, _h);
+                }
             }
         }
         
         if (_image > 0) {
             _paint.setAlpha(_alpha);
             
+            canvas.clip(0, 0, _w, _h);
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);
             canvas.fill();
