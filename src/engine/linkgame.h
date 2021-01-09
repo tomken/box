@@ -4,9 +4,10 @@
 
 #include "../app/app_bind.h"
 
+#define LINK_MAP_ROW  16
+#define LINK_MAP_COL  20
+
 namespace link {
-    
-    static const int grid_size = 15;
     
     class Point {
     public:
@@ -69,7 +70,7 @@ namespace link {
         void dumpMap();
         
     private:
-        Node  _map[grid_size][grid_size];
+        Node  _map[LINK_MAP_ROW][LINK_MAP_COL];
         
         MatchType _matchType;
         Point     _corner1;

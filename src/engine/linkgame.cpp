@@ -7,9 +7,6 @@
 #include <time.h>
 #include <assert.h>
 
-#define MAP_COL  12
-#define MAP_ROW  12
-
 #define _DEBUG_
 
 #ifdef _DEBUG_
@@ -29,11 +26,11 @@ namespace link {
     }
     
     int Engine::getRow() {
-        return MAP_ROW;
+        return LINK_MAP_ROW;
     }
     
     int Engine::getCol() {
-        return MAP_COL;
+        return LINK_MAP_COL;
     }
     
     void Engine::randomLevel() {
@@ -41,8 +38,8 @@ namespace link {
         int row, col;
         
         srand(time(0));
-        for (row=0; row<MAP_ROW; ++row) {
-            for (col=0; col<MAP_COL; ++col) {
+        for (row=0; row<LINK_MAP_ROW; ++row) {
+            for (col=0; col<LINK_MAP_COL; ++col) {
                 _map[row][col].number = -1;
                 _map[row][col].visible = false;
             }
@@ -51,8 +48,8 @@ namespace link {
         int n = 16;
         
         // 安放一半图片, 复制一半图片
-        for (row=1; row<MAP_ROW-1; ++row) {
-            for (col=1; col<MAP_COL-1; ++col) {
+        for (row=1; row<LINK_MAP_ROW-1; ++row) {
+            for (col=1; col<LINK_MAP_COL-1; ++col) {
                 if (row % 2 == 1) {
                     _map[row][col].number = rand() % n;
                 } else {
@@ -63,11 +60,11 @@ namespace link {
         }
         
         // 随机交换
-        for (int i=0; i<MAP_ROW*MAP_COL*3; i++) {
-            int r1 = rand() % (MAP_ROW-2) + 1;
-            int c1 = rand() % (MAP_COL-2) + 1;
-            int r2 = rand() % (MAP_ROW-2) + 1;
-            int c2 = rand() % (MAP_COL-2) + 1;
+        for (int i=0; i<LINK_MAP_ROW*LINK_MAP_COL*3; i++) {
+            int r1 = rand() % (LINK_MAP_ROW-2) + 1;
+            int c1 = rand() % (LINK_MAP_COL-2) + 1;
+            int r2 = rand() % (LINK_MAP_ROW-2) + 1;
+            int c2 = rand() % (LINK_MAP_COL-2) + 1;
             
             int num = _map[r1][c1].number;
             _map[r1][c1].number = _map[r2][c2].number;
@@ -111,8 +108,8 @@ namespace link {
     }
     
     bool Engine::checkFinished() {
-        for (int row=0; row<MAP_ROW; ++row) {
-            for (int col=0; col<MAP_COL; ++col) {
+        for (int row=0; row<LINK_MAP_ROW; ++row) {
+            for (int col=0; col<LINK_MAP_COL; ++col) {
                 if (_map[row][col].visible) {
                     return false;
                 }
@@ -224,7 +221,7 @@ namespace link {
         }
         
         // to down
-        for (row=a.row+1, col=a.col; row<MAP_ROW; ++row) {
+        for (row=a.row+1, col=a.col; row<LINK_MAP_ROW; ++row) {
             Point c = {row, col};
             if (isVisiable(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
@@ -246,7 +243,7 @@ namespace link {
         }
         
         // to right
-        for (row=a.row, col=a.col+1; col<MAP_COL; ++col) {
+        for (row=a.row, col=a.col+1; col<LINK_MAP_COL; ++col) {
             Point c = {row, col};
             if (isVisiable(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
@@ -262,9 +259,9 @@ namespace link {
     void Engine::dumpMap() {
         LOG("   00 01 02 03 04 05 06 07 08 08 10 11 12 13 14 15\n");
         LOG("   -----------------------------------------------\n");
-        for (int row=0; row<MAP_ROW; row++) {
+        for (int row=0; row<LINK_MAP_ROW; row++) {
             LOG("%2d ", row);
-            for (int col=0; col<MAP_COL; col++) {
+            for (int col=0; col<LINK_MAP_COL; col++) {
                 LOG("%2d " , _map[row][col].number);
             }
             LOG("\n");

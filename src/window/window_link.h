@@ -45,8 +45,8 @@ namespace link {
         Shape*  _select;
         Point   _last;
         
-        Image*  _blocks[grid_size][grid_size];
-        Image*  _icons[grid_size][grid_size];
+        Image*  _blocks[LINK_MAP_ROW][LINK_MAP_COL];
+        Image*  _icons[LINK_MAP_ROW][LINK_MAP_COL];
         
         enum State {
             None,

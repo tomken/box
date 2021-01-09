@@ -45,13 +45,13 @@ static int mac_OpenDevice(app::Audio* driver) {
         case AUDIO_F32LSB:
         case AUDIO_F32MSB:
             valid_datatype = 1;
-            strdesc->mBitsPerChannel = SDL_AUDIO_BITSIZE(driver->spec.format);
-            if (SDL_AUDIO_ISBIGENDIAN(driver->spec.format))
+            strdesc->mBitsPerChannel = AUDIO_BITSIZE(driver->spec.format);
+            if (AUDIO_ISBIGENDIAN(driver->spec.format))
                 strdesc->mFormatFlags |= kLinearPCMFormatFlagIsBigEndian;
 
-            if (SDL_AUDIO_ISFLOAT(driver->spec.format))
+            if (AUDIO_ISFLOAT(driver->spec.format))
                 strdesc->mFormatFlags |= kLinearPCMFormatFlagIsFloat;
-            else if (SDL_AUDIO_ISSIGNED(driver->spec.format))
+            else if (AUDIO_ISSIGNED(driver->spec.format))
                 strdesc->mFormatFlags |= kLinearPCMFormatFlagIsSignedInteger;
             break;
 
