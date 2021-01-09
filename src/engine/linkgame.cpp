@@ -7,7 +7,7 @@
 #include <time.h>
 #include <assert.h>
 
-#define _DEBUG_
+// #define _DEBUG_
 
 #ifdef _DEBUG_
 #define LOG(...) printf(__VA_ARGS__)
@@ -45,7 +45,7 @@ namespace link {
             }
         }
         
-        int n = 50;
+        int n = LINK_IMG_CNT;
         
         // 安放一半图片, 复制一半图片
         for (row=1; row<LINK_MAP_ROW-1; ++row) {
@@ -94,13 +94,10 @@ namespace link {
         
         LOG("===== Link match begin =====\n");
         if (matchDirect(a, b)) {
-            n1.visible = n2.visible = false;
             return true;
         } else if(matchOneCorner(a, b)) {
-            n1.visible = n2.visible = false;
             return true;
         } else if(matchTwoCorner(a, b)) {
-            n1.visible = n2.visible = false;
             return true;
         }
         
@@ -257,59 +254,43 @@ namespace link {
     }
 
     bool Engine::checkSolution() {
-        bool noPathLeft = false;
-        while (!noPathLeft){
-            noPathLeft = true;
-            for (int row=0; row<LINK_MAP_ROW; row++) {
-                for (int col=0; col<LINK_MAP_COL; col++){
-                    if (!_map[row][col].visiable){
-                        Point p;
-                        p.row = row;
-                        p.col = col;
-                        if(searchMap(p) && noPathLeft)
-                            noPathLeft = false;
+        for (int row=0; row<LINK_MAP_ROW; row++) {
+            for (int col=0; col<LINK_MAP_COL; col++){
+                if (_map[row][col].visible){
+                    Point p = {row, col};
+                    if (searchMapFor(p)) {
+                        return true;
                     }
                 }
             }
-        };
-        return true;
+        }
+
+        return false;
     }
 
-    bool Engine::searchMap(const Point& p1){
-         bool inner1=TRUE;
-    
-        //printf("begin match:%d,%d\n",p1.x,p1.y);
-        int c1=map[p1.x][p1.y];
-        for (iy=p1.y;iy<_height;iy++){
-            for(ix=0;ix<_width;ix++){
-                //遍历查找整个图板的时候，图板中，起始点之前的图片实际已经查找过
-                //所以应当从图片之后的部分开始查找才有效率
-                //遍历的方式是逐行、每行中逐个遍历
-                //在第一次循环的时候，x坐标应当也是起始点的下一个，所以使用inner1来确认第一行循环
-                if (inner1){
-                    ix=p1.x+1;
-                    inner1=FALSE;
+    bool Engine::searchMapFor(const Point& p1) {
+        for (int row=0; row<LINK_MAP_ROW; row++){
+            for (int col=0; col<LINK_MAP_COL; col++) {
+                if (row == p1.row && col == p1.col) {
+                    // skip self
+                    continue;
                 }
-                if(map[ix][iy] != c1){
-                    //printf("skip:%d,%d\n",ix,iy);
-                    //continue;
-                } else {
-                    _point p2;
-                    p2.x=ix;
-                    p2.y=iy;
-                    if (!havePath(p1,p2)){
-                        //printf("No path from [%d,%d] to [%d,%d]\n",p1.x,p1.y,p2.x,p2.y);
-                    } else {
-                        dumpMapWithHotPoint(p1,p2);
-                        map[p1.x][p1.y]=empty;
-                        map[p2.x][p2.y]=empty;
-                        //dumpMap();
-                        return TRUE;
-                    }
+                
+                if (!_map[row][col].visible) {
+                    // skip space
+                    continue;
+                }
+                
+                Point p2 = {row, col};
+                if (match(p1, p2)) {
+                    _solution1 = p1;
+                    _solution2 = p2;
+                    return true;
                 }
             }
         };
-        return FALSE;
+                        
+        return false;
     }
     
     void Engine::dumpMap() {

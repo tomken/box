@@ -56,6 +56,13 @@ namespace link {
         
         if (key == GLFW_KEY_R) {
             resetGame();
+        } else if (key == GLFW_KEY_SPACE) {
+            if (_engine->checkSolution()) {
+                const Point& p1 = _engine->solution1();
+                const Point& p2 = _engine->solution2();
+                printf("Solution 1 row:%d col:%d\n", p1.row, p1.col);
+                printf("Solution 2 row:%d col:%d\n", p2.row, p2.col);
+            }
         } else if (key == GLFW_KEY_MINUS) {
             // boxes->toPrevLevel();
             resetGame();
@@ -244,6 +251,9 @@ namespace link {
                 if (img) img->fadeOut();
                 img = _icons[point.row][point.col];
                 if (img) img->fadeOut();
+                
+                _engine->setVisiable(_last, false);
+                _engine->setVisiable(point, false);
                 
                 if (_engine->checkFinished()) {
                     resetGame();

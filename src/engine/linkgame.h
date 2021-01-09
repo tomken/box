@@ -5,7 +5,8 @@
 #include "../app/app_bind.h"
 
 #define LINK_MAP_ROW  16
-#define LINK_MAP_COL  20
+#define LINK_MAP_COL  16
+#define LINK_IMG_CNT  50
 
 namespace link {
     
@@ -63,10 +64,24 @@ namespace link {
             return _map[point.row][point.col].visible;
         }
         
+        void setVisiable(const Point& point, bool visiable) {
+            _map[point.row][point.col].visible = visiable;
+        }
+        
+        const Point& solution1() const {
+            return _solution1;
+        }
+        
+        const Point& solution2() const {
+            return _solution2;
+        }
+        
     private:
         bool matchDirect(const Point& a, const Point& b);
         bool matchOneCorner(const Point& a, const Point& b);
         bool matchTwoCorner(const Point& a, const Point& b);
+        
+        bool searchMapFor(const Point& a);
         
         void dumpMap();
         
@@ -76,6 +91,9 @@ namespace link {
         MatchType _matchType;
         Point     _corner1;
         Point     _corner2;
+        
+        Point     _solution1;
+        Point     _solution2;
     };
 }
 
