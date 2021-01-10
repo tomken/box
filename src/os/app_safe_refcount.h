@@ -2,6 +2,8 @@
 #ifndef __APP_SAFE_REFCOUNT_H__
 #define __APP_SAFE_REFCOUNT_H__
 
+#include "app_macro.h"
+
 // for linux
 #if defined(__GNUC__)
 
@@ -55,7 +57,19 @@ static _ALWAYS_INLINE_ T atomic_exchange_if_greater(volatile T *pw, volatile V v
 
 // for window
 #if defined(_MSC_VER)
+uint32_t atomic_conditional_increment(volatile uint32_t *pw);
+uint32_t atomic_decrement(volatile uint32_t *pw);
+uint32_t atomic_increment(volatile uint32_t *pw);
+uint32_t atomic_sub(volatile uint32_t *pw, volatile uint32_t val);
+uint32_t atomic_add(volatile uint32_t *pw, volatile uint32_t val);
+uint32_t atomic_exchange_if_greater(volatile uint32_t *pw, volatile uint32_t val);
 
+uint64_t atomic_conditional_increment(volatile uint64_t *pw);
+uint64_t atomic_decrement(volatile uint64_t *pw);
+uint64_t atomic_increment(volatile uint64_t *pw);
+uint64_t atomic_sub(volatile uint64_t *pw, volatile uint64_t val);
+uint64_t atomic_add(volatile uint64_t *pw, volatile uint64_t val);
+uint64_t atomic_exchange_if_greater(volatile uint64_t *pw, volatile uint64_t val);
 
 #endif
 
