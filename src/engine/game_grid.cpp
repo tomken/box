@@ -1,6 +1,7 @@
 
 #include "game_grid.h"
 
+#include <stdlib.h>
 #include <time.h>
 
 namespace game {

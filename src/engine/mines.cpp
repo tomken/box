@@ -1,6 +1,9 @@
 
 #include "mines.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 #define M_IDX 0
 
 namespace mines {
