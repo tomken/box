@@ -7,7 +7,7 @@
 #include <time.h>
 #include <assert.h>
 
-// #define _DEBUG_
+#define _DEBUG_
 
 #ifdef _DEBUG_
 #define LOG(...) printf(__VA_ARGS__)
@@ -15,67 +15,58 @@
 #define LOG(...)
 #endif
 
+#define NODE_IMAGE_IDX 0
+#define number getIntData(NODE_IMAGE_IDX)
+
 namespace link {
     
-    Engine::Engine() {
+    static void initMap(game::Grid& grid, game::GridNode& node) {
+        node.setVisible(false);
+        node.setData(NODE_IMAGE_IDX, -1);
+    }
+    
+    static void initImage(game::Grid& grid, game::GridNode& node) {
+        const game::GridPos& pos = node.position();
+        if (pos.row == 0 || pos.col == 0)
+            return;
+            
+        if (pos.row == (LINK_MAP_ROW-1) ||
+            pos.col == (LINK_MAP_COL-1))
+            return;
         
+        if (pos.row % 2 == 1) {
+            int icon = rand() % LINK_IMG_CNT;
+            node.setData(NODE_IMAGE_IDX, icon);
+        } else {
+            game::GridPos p = pos;
+            p.row--;
+            const game::GridNode& n = grid.get(p);
+            node.setData(NODE_IMAGE_IDX, n.getIntData(NODE_IMAGE_IDX));
+        }
+        node.setVisible(true);
+    }
+    
+    Engine::Engine() {
+        _grid = new game::Grid(LINK_MAP_ROW, LINK_MAP_COL);
     }
     
     Engine::~Engine() {
-        
-    }
-    
-    int Engine::getRow() {
-        return LINK_MAP_ROW;
-    }
-    
-    int Engine::getCol() {
-        return LINK_MAP_COL;
+        delete _grid;
+        _grid = NULL;
     }
     
     void Engine::randomLevel() {
         _matchType = MatchTypeNone;
-        int row, col;
-        
-        srand(time(0));
-        for (row=0; row<LINK_MAP_ROW; ++row) {
-            for (col=0; col<LINK_MAP_COL; ++col) {
-                _map[row][col].number = -1;
-                _map[row][col].visible = false;
-            }
-        }
-        
-        int n = LINK_IMG_CNT;
+        _grid->init(app::bind(&initMap));
         
         // 安放一半图片, 复制一半图片
-        for (row=1; row<LINK_MAP_ROW-1; ++row) {
-            for (col=1; col<LINK_MAP_COL-1; ++col) {
-                if (row % 2 == 1) {
-                    _map[row][col].number = rand() % n;
-                } else {
-                    _map[row][col].number  = _map[row-1][col].number;
-                }
-                _map[row][col].visible = true;
-            }
-        }
-        
-        // 随机交换
-        for (int i=0; i<LINK_MAP_ROW*LINK_MAP_COL*3; i++) {
-            int r1 = rand() % (LINK_MAP_ROW-2) + 1;
-            int c1 = rand() % (LINK_MAP_COL-2) + 1;
-            int r2 = rand() % (LINK_MAP_ROW-2) + 1;
-            int c2 = rand() % (LINK_MAP_COL-2) + 1;
-            
-            int num = _map[r1][c1].number;
-            _map[r1][c1].number = _map[r2][c2].number;
-            _map[r2][c2].number = num;
-            
-            bool vis = _map[r1][c1].visible;
-            _map[r1][c1].visible = _map[r2][c2].visible;
-            _map[r2][c2].visible = vis;
-        }
-        
+        _grid->walk(app::bind(&initImage));
+        _grid->randomSwap(LINK_MAP_ROW*LINK_MAP_COL*3, 1);
         dumpMap();
+    }
+    
+    int Engine::getImage(const Point& p) {
+        return get(p).getIntData(NODE_IMAGE_IDX);
     }
     
     bool Engine::match(const Point& a, const Point& b) {
@@ -84,8 +75,8 @@ namespace link {
             return false;
         }
         
-        Node& n1 = _map[a.row][a.col];
-        Node& n2 = _map[b.row][b.col];
+        Node& n1 = _grid->get(a);
+        Node& n2 = _grid->get(b);
         
         if (n1.number != n2.number) {
             LOG("Link match != number not match!\n");
@@ -105,14 +96,7 @@ namespace link {
     }
     
     bool Engine::checkFinished() {
-        for (int row=0; row<LINK_MAP_ROW; ++row) {
-            for (int col=0; col<LINK_MAP_COL; ++col) {
-                if (_map[row][col].visible) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return _grid->isAllVisible();
     }
     
     bool Engine::matchDirect(const Point& a, const Point& b) {
@@ -122,7 +106,8 @@ namespace link {
             yMatch = true;
             if (a.col > b.col) {
                 for (int i=b.col+1; i<a.col; ++i) {
-                    if (_map[a.row][i].visible) {
+                    Point p(a.row, i);
+                    if (_grid->get(p).isVisible()) {
                         LOG("Link match != break on row=%d col%d!\n", a.row, i);
                         yMatch = false;
                         break;
@@ -132,7 +117,8 @@ namespace link {
             
             if (b.col > a.col) {
                 for (int i=a.col+1; i<b.col; ++i) {
-                    if (_map[a.row][i].visible == true) {
+                    Point p(a.row, i);
+                    if (_grid->get(p).isVisible()) {
                         LOG("Link match != break on row=%d col%d!\n", a.row, i);
                         yMatch = false;
                         break;
@@ -147,7 +133,8 @@ namespace link {
             xMatch = true;
             if (a.row > b.row) {
                 for (int i=b.row+1; i<a.row; ++i) {
-                    if (_map[i][a.col].visible == true) {
+                    Point p(i, a.col);
+                    if (_grid->get(p).isVisible()) {
                         LOG("Link match != break on row=%d col%d!\n", i, a.col);
                         xMatch = false;
                         break;
@@ -157,7 +144,8 @@ namespace link {
             
             if (b.row > a.row) {
                 for (int i=a.row+1; i<b.row; ++i) {
-                    if (_map[i][a.col].visible == true) {
+                    Point p(i, a.col);
+                    if (_grid->get(p).isVisible()) {
                         LOG("Link match != break on row=%d col%d!\n", i, a.col);
                         xMatch = false;
                         break;
@@ -178,7 +166,7 @@ namespace link {
         
         c.row = a.row;
         c.col = b.col;
-        if (!isVisiable(c) &&
+        if (!isVisible(c) &&
             matchDirect(a, c) &&
             matchDirect(c, b)) {
             
@@ -190,7 +178,7 @@ namespace link {
         
         c.row = b.row;
         c.col = a.col;
-        if (!isVisiable(c) &&
+        if (!isVisible(c) &&
             matchDirect(a, c) &&
             matchDirect(c, b)) {
             _matchType = MatchTypeOneCorner;
@@ -208,8 +196,8 @@ namespace link {
         
         // to up
         for (row=a.row-1, col=a.col; row>=0; --row) {
-            Point c = {row, col};
-            if (isVisiable(c)) {
+            Point c(row, col);
+            if (isVisible(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
@@ -219,8 +207,8 @@ namespace link {
         
         // to down
         for (row=a.row+1, col=a.col; row<LINK_MAP_ROW; ++row) {
-            Point c = {row, col};
-            if (isVisiable(c)) {
+            Point c(row, col);
+            if (isVisible(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
@@ -230,8 +218,8 @@ namespace link {
         
         // to left
         for (row=a.row, col=a.col-1; col>=0; --col) {
-            Point c = {row, col};
-            if (isVisiable(c)) {
+            Point c(row, col);
+            if (isVisible(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
@@ -241,8 +229,8 @@ namespace link {
         
         // to right
         for (row=a.row, col=a.col+1; col<LINK_MAP_COL; ++col) {
-            Point c = {row, col};
-            if (isVisiable(c)) {
+            Point c(row, col);
+            if (isVisible(c)) {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
@@ -256,8 +244,8 @@ namespace link {
     bool Engine::checkSolution() {
         for (int row=0; row<LINK_MAP_ROW; row++) {
             for (int col=0; col<LINK_MAP_COL; col++){
-                if (_map[row][col].visible){
-                    Point p = {row, col};
+                Point p(row, col);
+                if (_grid->get(p).isVisible()){
                     if (searchMapFor(p)) {
                         return true;
                     }
@@ -276,12 +264,12 @@ namespace link {
                     continue;
                 }
                 
-                if (!_map[row][col].visible) {
+                Point p2(row, col);
+                if (!_grid->get(p2).isVisible()) {
                     // skip space
                     continue;
                 }
                 
-                Point p2 = {row, col};
                 if (match(p1, p2)) {
                     _solution1 = p1;
                     _solution2 = p2;
@@ -294,15 +282,17 @@ namespace link {
     }
     
     void Engine::dumpMap() {
+#ifdef _DEBUG_
         LOG("   00 01 02 03 04 05 06 07 08 08 10 11 12 13 14 15\n");
         LOG("   -----------------------------------------------\n");
         for (int row=0; row<LINK_MAP_ROW; row++) {
             LOG("%2d ", row);
             for (int col=0; col<LINK_MAP_COL; col++) {
-                LOG("%2d " , _map[row][col].number);
+                LOG("%2d " , _grid->get(Point(row, col)).getIntData(NODE_IMAGE_IDX));
             }
             LOG("\n");
         }
+#endif
     }
     
 }

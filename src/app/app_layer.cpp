@@ -26,7 +26,7 @@ namespace app {
         std::vector<Node*>::iterator it;
         for (it = _nodes.begin(); it != _nodes.end(); it++) {
             Node* node = *it;
-            if (node->isVisiable()) {
+            if (node->isVisible()) {
                 node->onDraw(canvas);
             }
         }

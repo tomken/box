@@ -163,7 +163,7 @@ namespace link {
                 pt.row = row;
                 pt.col = col;
                 Node& node = _engine->get(pt);
-                if (node.visible) {
+                if (node.isVisible()) {
                     int x = col*box_w + grid_l;
                     int y = row*box_h + grid_t;
                     
@@ -179,7 +179,7 @@ namespace link {
                     icon->setPosition(x + 2, y);
                     icon->setSize(box_w, box_h);
                     icon->setPath("link/iconList.png");
-                    icon->setImageOffset(node.number*31, 0);
+                    icon->setImageOffset(_engine->getImage(pt)*31, 0);
                     _boxLayer->addNode(icon);
                     
                     _icons[row][col] = icon;
@@ -197,7 +197,7 @@ namespace link {
         _select->setStrokeColor(Color::Brown);
         _select->setStrokeWidth(4);
         _select->setFillColor(Color(198, 40, 40, 100));
-        _select->setVisiable(false);
+        _select->setVisible(false);
         _topLayer->addNode(_select);
         
         _state = None;
@@ -225,19 +225,19 @@ namespace link {
             return;
         }
         
-        if (!_engine->get(point).visible) {
+        if (!_engine->get(point).isVisible()) {
             printf(">> row:%d col:%d is hide\n", point.row, point.col);
             return;
         }
         
         if (_state == None) {
             _select->setPosition(point.col*box_w + grid_l + 2, point.row*box_h + grid_t);
-            _select->setVisiable(true);
+            _select->setVisible(true);
             _last.row = point.row;
             _last.col = point.col;
             _state = Select;
         } else {
-            _select->setVisiable(false);
+            _select->setVisible(false);
             _state = None;
             
             if (_engine->match(_last, point)) {
@@ -252,8 +252,8 @@ namespace link {
                 img = _icons[point.row][point.col];
                 if (img) img->fadeOut();
                 
-                _engine->setVisiable(_last, false);
-                _engine->setVisiable(point, false);
+                _engine->setVisible(_last, false);
+                _engine->setVisible(point, false);
                 
                 if (_engine->checkFinished()) {
                     resetGame();

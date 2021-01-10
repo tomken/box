@@ -3,7 +3,7 @@
 #include "app_path.h"
 #include "app_window.h"
 
-#define NANOVG_GL3_IMPLEMENTATION
+#define NANOVG_GL2_IMPLEMENTATION
 #include "../nanovg/nanovg_gl.h"
 
 #define NV_COLOR(c) nvgRGBA(c.red(), c.green(), c.blue(), c.alpha())
@@ -11,11 +11,11 @@
 namespace app {
     
     Canvas::Canvas() {
-        vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
     }
 
     Canvas::~Canvas() {
-        nvgDeleteGL3(vg);
+        nvgDeleteGL2(vg);
     }
     
     Paint Canvas::createLinearGradient(float sx, float sy, float ex, float ey,

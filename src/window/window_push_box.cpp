@@ -202,7 +202,7 @@ namespace boxes {
     void Game::update(const BoxInfo& info) {
         if (info.type == BoxTypeMan) {
             if (info.fromRow < info.toRow)
-                _man->rotationTo(180);
+                _man->setAngle(180);
             if (info.fromRow > info.toRow)
                 _man->setAngle(0);
             if (info.fromCol < info.toCol)

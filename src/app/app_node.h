@@ -24,7 +24,7 @@ namespace app {
             _uuid = UUID::make();
             _uuid._data = this;
             
-            _visiable = true;
+            _visible  = true;
             _alpha    = 1.0;
             _scale    = 1.0;
             _angle    = 0;
@@ -83,12 +83,12 @@ namespace app {
             _scale = scale;
         }
         
-        void setVisiable(bool visiable) {
-            _visiable = visiable;
+        void setVisible(bool visible) {
+            _visible = visible;
         }
         
-        bool isVisiable() const {
-            return _visiable;
+        bool isVisible() const {
+            return _visible;
         }
         
         bool inBounds(int x, int y) {
@@ -126,7 +126,7 @@ namespace app {
         float _angle;
         float _scale;
         
-        bool _visiable;
+        bool  _visible;
     };
     
 }

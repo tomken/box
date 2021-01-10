@@ -13,6 +13,7 @@ folders.append('quickjs')
 folders.append('box2d-lite')
 folders.append('engine')
 folders.append('gobang')
+folders.append('test')
 
 folders.append('platform/' + TMAKE_TARGET)
 

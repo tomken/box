@@ -68,7 +68,7 @@ namespace app {
     
     void Node::onAnimatorBegin(tl::AnimatorBase* animator) {
         if (animator->type() == tl::AnimationTypeAlpha) {
-            setVisiable(true);
+            setVisible(true);
         }
     }
     
@@ -89,7 +89,7 @@ namespace app {
     
     void Node::onAnimatorEnd(tl::AnimatorBase* animator) {
         if (animator->type() == tl::AnimationTypeAlpha) {
-            // setVisiable(true);
+            // setVisible(true);
         }
     }
 }

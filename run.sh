@@ -1,1 +1,1 @@
-../../tmake/tmake project xcode open
+../tmake/tmake project xcode open

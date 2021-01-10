@@ -3,24 +3,17 @@
 #define __LINK_GAME_H__
 
 #include "../app/app_bind.h"
+#include "game_grid.h"
 
 #define LINK_MAP_ROW  16
 #define LINK_MAP_COL  16
-#define LINK_IMG_CNT  50
+#define LINK_IMG_CNT  30
+
+//#define LINK_MAP_ROW  8
+//#define LINK_MAP_COL  8
+//#define LINK_IMG_CNT  6
 
 namespace link {
-    
-    class Point {
-    public:
-        int row;
-        int col;
-    };
-    
-    class Node {
-    public:
-        int  number;
-        bool visible;
-    };
     
     enum MatchType {
         MatchTypeNone = 0,
@@ -29,14 +22,17 @@ namespace link {
         MatchTwoCorner,
     };
     
+    typedef game::GridPos Point;
+    typedef game::GridNode Node;
+    
     class Engine {
     public:
         Engine();
         ~Engine();
         
     public:
-        static int getRow();
-        static int getCol();
+        static int getRow() { return LINK_MAP_ROW; }
+        static int getCol() { return LINK_MAP_COL; }
         
     public:
         void randomLevel();
@@ -48,6 +44,8 @@ namespace link {
             return _matchType;
         }
         
+        int getImage(const Point& p);
+        
         const Point& corner1() const {
             return _corner1;
         }
@@ -56,16 +54,16 @@ namespace link {
             return _corner2;
         }
         
-        Node& get(const Point& point) {
-            return _map[point.row][point.col];
+        game::GridNode& get(const Point& point) {
+            return _grid->get(point);
         }
         
-        bool isVisiable(const Point& point) {
-            return _map[point.row][point.col].visible;
+        bool isVisible(const Point& point) {
+            return _grid->get(point).isVisible();
         }
         
-        void setVisiable(const Point& point, bool visiable) {
-            _map[point.row][point.col].visible = visiable;
+        void setVisible(const Point& point, bool visible) {
+            _grid->get(point).setVisible(visible);
         }
         
         const Point& solution1() const {
@@ -86,14 +84,14 @@ namespace link {
         void dumpMap();
         
     private:
-        Node  _map[LINK_MAP_ROW][LINK_MAP_COL];
+        game::Grid*  _grid;
         
-        MatchType _matchType;
-        Point     _corner1;
-        Point     _corner2;
+        MatchType    _matchType;
+        Point        _corner1;
+        Point        _corner2;
         
-        Point     _solution1;
-        Point     _solution2;
+        Point        _solution1;
+        Point        _solution2;
     };
 }
 

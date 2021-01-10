@@ -209,9 +209,9 @@ namespace gobang {
 
     void Game::resetGame() {
         _winer->setAlpha(0.0f);
-        _winer->setVisiable(false);
+        _winer->setVisible(false);
         _loser->setAlpha(0.0f);
-        _loser->setVisiable(false);
+        _loser->setVisible(false);
         isFinished = false;
         
         _grid->resst();
@@ -337,10 +337,10 @@ namespace gobang {
 
     void Game::showResult(bool isYourWin) {
         if (isYourWin) {
-            _winer->setVisiable(true);
+            _winer->setVisible(true);
             _winer->fadeIn();
         } else {
-            _loser->setVisiable(true);
+            _loser->setVisible(true);
             _loser->fadeIn();
         }
         
