@@ -92,7 +92,7 @@ namespace app {
     }
     
     void Audio::start() {
-        //platform_audio_start(this);
+        platform_audio_start(this);
     }
     
     void Audio::pause() {
@@ -104,11 +104,11 @@ namespace app {
     }
     
     void Audio::stop() {
-        //platform_audio_stop(this);
+        platform_audio_stop(this);
     }
     
     void Audio::init() {
-        //platform_audio_init(this);
+        platform_audio_init(this);
     }
     
 }
