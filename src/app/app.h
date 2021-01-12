@@ -7,5 +7,6 @@
 #include "app/app_layer.h"
 #include "app/app_image.h"
 #include "app/app_shape.h"
+#include "audio/app_audio.h"
 
 #endif // __APP_APP_H__

@@ -5,6 +5,8 @@
 #include "app/app.h"
 #include "engine/linkgame.h"
 
+#include "lightning.h"
+
 using namespace app;
 
 namespace link {
@@ -31,6 +33,7 @@ namespace link {
         
         void resetGame();
         bool convert2index(int x, int y, Point& point);
+        app::Point convert2point(const Point& point);
         void process(int x, int y);
         
     private:
@@ -44,6 +47,11 @@ namespace link {
         Scene*  _end;
         Shape*  _select;
         Point   _last;
+        
+        Audio*  _selectAudio;
+        Audio*  _clearAudio;
+        
+        Lightning* _light;
         
         Image*  _blocks[LINK_MAP_ROW][LINK_MAP_COL];
         Image*  _icons[LINK_MAP_ROW][LINK_MAP_COL];

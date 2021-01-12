@@ -9,6 +9,7 @@ namespace app {
     enum ShapeType {
         ShapeTypeRect = 0,
         ShapeTypeCircle,
+        ShapeTypeLine,
     };
     
     class Shape : public Node {

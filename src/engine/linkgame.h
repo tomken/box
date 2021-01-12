@@ -19,7 +19,7 @@ namespace link {
         MatchTypeNone = 0,
         MatchTypeDirect,
         MatchTypeOneCorner,
-        MatchTwoCorner,
+        MatchTypeTwoCorner,
     };
     
     typedef game::GridPos Point;

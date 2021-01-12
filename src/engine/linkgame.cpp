@@ -201,6 +201,10 @@ namespace link {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
+                _matchType = MatchTypeTwoCorner;
+                _corner2 = _corner1;
+                _corner1.row = c.row;
+                _corner1.col = c.col;
                 return true;
             }
         }
@@ -212,6 +216,10 @@ namespace link {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
+                _corner2 = _corner1;
+                _corner1.row = c.row;
+                _corner1.col = c.col;
+                _matchType = MatchTypeTwoCorner;
                 return true;
             }
         }
@@ -223,6 +231,10 @@ namespace link {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
+                _matchType = MatchTypeTwoCorner;
+                _corner2 = _corner1;
+                _corner1.row = c.row;
+                _corner1.col = c.col;
                 return true;
             }
         }
@@ -234,6 +246,10 @@ namespace link {
                 LOG("Link match != break on row=%d col%d!\n", row, col);
                 break;
             } else if(matchOneCorner(b, c)) {
+                _matchType = MatchTypeTwoCorner;
+                _corner2 = _corner1;
+                _corner1.row = c.row;
+                _corner1.col = c.col;
                 return true;
             }
         }

@@ -9,12 +9,11 @@ namespace app {
     class AudioImpl;
     class Audio {
     public:
-        Audio();
+        Audio(const char* path);
         ~Audio();
         
     public:
-        bool play(const char* path);
-        void start();
+        void play();
         void pause();
         void resume();
         void stop();

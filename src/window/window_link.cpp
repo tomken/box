@@ -14,6 +14,9 @@ namespace link {
     
     Game::Game() : Window(grid_r, grid_b) {
         _engine = new Engine();
+        
+        _selectAudio = new Audio("link/sel.wav");
+        _clearAudio = new Audio("link/elec.wav");
     }
     
     Game::~Game() {
@@ -200,6 +203,15 @@ namespace link {
         _select->setVisible(false);
         _topLayer->addNode(_select);
         
+        _light = new Lightning();
+        _light->setStrokeWidth(8);
+        _light->setStrokeColor(Color(225, 245, 254));
+        _light->setVisible(false);
+        _light->addPoint(app::Point(100, 100));
+        _light->addPoint(app::Point(200, 200));
+        _light->generate();
+        _topLayer->addNode(_light);
+        
         _state = None;
         
         int level = 0; // boxes->getLevel();
@@ -216,6 +228,13 @@ namespace link {
             return true;
         }
         return false;
+    }
+    
+    app::Point Game::convert2point(const Point& point) {
+        app::Point pt;
+        pt.x = grid_l + point.col * box_w + box_w / 2;
+        pt.y = grid_t + point.row * box_h + box_h / 2;
+        return pt;
     }
     
     void Game::process(int x, int y) {
@@ -236,6 +255,7 @@ namespace link {
             _last.row = point.row;
             _last.col = point.col;
             _state = Select;
+            _selectAudio->play();
         } else {
             _select->setVisible(false);
             _state = None;
@@ -254,6 +274,21 @@ namespace link {
                 
                 _engine->setVisible(_last, false);
                 _engine->setVisible(point, false);
+                
+                _light->setVisible(true);
+                _light->reset();
+                _light->addPoint(convert2point(_last));
+                if (_engine->matchType() == MatchTypeOneCorner) {
+                    _light->addPoint(convert2point(_engine->corner1()));
+                } else if (_engine->matchType() == MatchTypeTwoCorner) {
+                    _light->addPoint(convert2point(_engine->corner1()));
+                    _light->addPoint(convert2point(_engine->corner2()));
+                }
+                _light->addPoint(convert2point(point));
+                _light->generate();
+                _light->animate(tl::AnimationTypeAlpha, 1.0f, 0.f, 800);
+                
+                _clearAudio->play();
                 
                 if (_engine->checkFinished()) {
                     resetGame();

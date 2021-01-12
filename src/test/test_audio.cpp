@@ -8,6 +8,6 @@ const char* path = "/Users/zy/work/SDL2-2.0.14/Xcode-iOS/Demos/data/drums/ds_bru
 #endif
 
 void test_audio() {
-    app::Audio* audio = new app::Audio();
-    audio->play(path);
+    app::Audio* audio = new app::Audio(path);
+    audio->play();
 }

@@ -1,5 +1,6 @@
 
 #include "app_audio.h"
+#include "app_path.h"
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
@@ -29,12 +30,16 @@ namespace app {
         }
         
     public:
-        bool play(const char* path) {
+        bool init(const char* path) {
+            ma_decoder_uninit(&decoder);
+            
             ma_result result;
             result = ma_decoder_init_file(path, NULL, &decoder);
             if (result != MA_SUCCESS) {
                 return false;
             }
+            
+            ma_device_uninit(&device);
             
             config = ma_device_config_init(ma_device_type_playback);
             config.playback.format   = decoder.outputFormat;
@@ -45,18 +50,19 @@ namespace app {
             
             if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) {
                 printf("Failed to open playback device.\n");
-                ma_decoder_uninit(&decoder);
                 return false;
             }
+ 
+            return true;
+        }
+        
+        void play() {
+            ma_decoder_seek_to_pcm_frame(&decoder, 0);
             
+            ma_device_stop(&device);
             if (ma_device_start(&device) != MA_SUCCESS) {
                 printf("Failed to start playback device.\n");
-                ma_device_uninit(&device);
-                ma_decoder_uninit(&decoder);
-                return false;
             }
-            
-            return true;
         }
         
         void stop() {
@@ -69,19 +75,22 @@ namespace app {
         ma_device        device;
     };
     
-    Audio::Audio() {
+    Audio::Audio(const char* path) {
+        Path pp(ROOT_PATH);
+        pp.join("images");
+        pp.join(path);
+        const char* realPath = pp.toString().data();
+        
         _impl = new AudioImpl();
+        _impl->init(realPath);
     }
     
     Audio::~Audio() {
         delete _impl;
     }
     
-    bool Audio::play(const char* path) {
-        return _impl->play(path);
-    }
-    
-    void Audio::start() {
+    void Audio::play() {
+        _impl->play();
     }
     
     void Audio::pause() {
