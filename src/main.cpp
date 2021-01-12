@@ -5,9 +5,11 @@
 
 #include "app/app_init.h"
 
+extern void test_audio();
 extern void test_image();
 
 int main(int argc, char* argv[]) {
+    test_audio();
 //    test_image();
 //    test_bind();
 //    test_script();
