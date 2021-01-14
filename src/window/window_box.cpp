@@ -4,12 +4,14 @@
 namespace box {
 
     static const int boxSize = 64;
-    static const int col = 15;
+    static const int col = 10;
     static const int row = 10;
     static const int count = col * row;
 
     Game::Game() : Window(col * boxSize, row * boxSize) {
         clickCount = 0;
+        isFinished = false;
+        ignorEvent = false;
     }
 
     Game::~Game() {
@@ -18,69 +20,65 @@ namespace box {
 
     void Game::onPress(int x, int y) {
         isPress = true;
+        
+        if (currentScene() == _start) {
+            resetGame();
+            changeScene("game");
+            ignorEvent = true;
+        } else if (currentScene() == _game) {
+            if (isFinished) {
+                changeScene("end");
+                ignorEvent = true;
+            }
+        } else if (currentScene() == _end) {
+            changeScene("menu");
+            ignorEvent = true;
+        }
     }
 
     void Game::onMove(int x, int y) {
-        if (isPress) {
-            if (x < 0 || x > _width)
-                return;
-            
-            if (y < 0 || y > _height)
-                return;
-             
-            int index;
-            convert2index(x, y, index);
-            Image* box = _boxs[index];
-            box->fadeOut(0.6);
-            
-            if (renIndex == index) {
-                changeScene("end");
-            }
+        if (isFinished || ignorEvent)
+            return;
+        
+        if (isPress && currentScene() == _game) {
+            checkWin(x, y);
         }
     }
 
     void Game::onRelease(int x, int y) {
-        if (currentScene() == _start) {
-            resetGame();
-            changeScene("game");
-        } else if (currentScene() == _game) {
-            clickCount++;
-            int index;
-            convert2index(x, y, index);
-            Image* box = _boxs[index];
-            box->fadeOut(0.6);
-            
-            if (renIndex == index) {
-                changeScene("end");
-            }
-        } else if (currentScene() == _end) {
-            changeScene("menu");
+        isPress = false;
+        if (isFinished || ignorEvent) {
+            ignorEvent = false;
+            return;
         }
         
-        isPress = false;
+        if (currentScene() == _game) {
+            checkWin(x, y);
+        }
+    }
+    
+    void Game::checkWin(int x, int y) {
+        if (x < 0 || x >= _width)
+            return;
+        
+        if (y < 0 || y >= _height)
+            return;
+        
+        int index;
+        convert2index(x, y, index);
+        
+        Image* box = _boxs[index];
+        if (!box->hasFlag(1)) {
+            box->setFlag(1);
+            box->fadeOut(0.6);
+        }
+        
+        if (renIndex == index) {
+            isFinished = true;
+        }
     }
 
     void Game::onKeyPress(int key) {
-     //   if (key == GLFW_KEY_UP) {
-     //       if (renY >= boxSize) {
-     //           renY -= boxSize;
-     //       }
-     //   } else if (key == GLFW_KEY_DOWN) {
-     //       if (renY < (_height - boxSize)) {
-     //           renY += boxSize;
-     //       }
-     //   } else if (key == GLFW_KEY_LEFT) {
-     //       if (renX >= boxSize) {
-     //           renX -= boxSize;
-     //       }
-     //   } else if (key == GLFW_KEY_RIGHT) {
-     //       if (renX < (_width - boxSize)) {
-     //           renX += boxSize;
-     //       }
-     //   } else {
-     //       printf("key=%d\n", key);
-     //   }
-        
         ren->setPosition(renX, renY);
     }
 
@@ -168,15 +166,6 @@ namespace box {
             layer->addNode(image);
             _boxs.push_back(image);
         }
-        /*int grx = random(0, _width);
-        int gry = random(0, _height);
-        Shape* shape = new Shape();
-        shape->setPosition(grx, gry);
-        shape->setSize(1000, 1000);
-        shape->setType(ShapeTypeCircle);
-        shape->setAlpha(0.9);
-        shape->setFillColor(Color::Green);
-        layer->addNode(shape);*/
         
         _game->addLayer(layer);
         
@@ -210,12 +199,15 @@ namespace box {
         renX = 0;
         renY = 0;
         
+        isFinished = false;
+        
         renIndex = random(0, count);
         convert2xy(renIndex, renX, renY);
         ren->setPosition(renX, renY);
         
         for (int i=0; i<count; i++) {
             Image* image = _boxs[i];
+            image->unsetFlag(1);
             image->setAlpha(1.0);
         }
     }

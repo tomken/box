@@ -33,6 +33,8 @@ namespace box {
         
         void resetGame();
         
+        void checkWin(int x, int y);
+        
     private:
         Image* ren;
         int    renX;
@@ -41,6 +43,8 @@ namespace box {
         int    clickCount;
         
         bool   isPress;
+        bool   isFinished;
+        bool   ignorEvent;
         
         Scene*  _start;
         Scene*  _game;

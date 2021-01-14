@@ -24,6 +24,7 @@ namespace app {
             _uuid = UUID::make();
             _uuid._data = this;
             
+            _flag     = 0;
             _visible  = true;
             _alpha    = 1.0;
             _scale    = 1.0;
@@ -97,6 +98,18 @@ namespace app {
             return (x > _x && x < (_x + _w)) && (y > _y && y < (_y + _h));
         }
         
+        void setFlag(uint32_t f) {
+            _flag |= f;
+        }
+        
+        void unsetFlag(uint32_t f) {
+            _flag &= ~f;
+        }
+        
+        bool hasFlag(uint32_t f) const {
+            return (_flag & f);
+        }
+        
     public: // for animator
         void fadeIn();
         void fadeOut(float to = 0.0f);
@@ -121,6 +134,8 @@ namespace app {
         float _h;
         
         float transform[6];
+        
+        int   _flag;
         
         float _alpha;
         float _angle;
