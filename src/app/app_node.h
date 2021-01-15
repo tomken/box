@@ -118,6 +118,10 @@ namespace app {
         
     public:
         virtual void onDraw(Canvas& canvas) {;}
+        virtual void onKeyPress(int key) {;}
+        virtual void onMouseDown(int x, int y) {;}
+        virtual void onMouseMove(int x, int y) {;}
+        virtual void onMouseUp(int x, int y) {;}
         
     private: // for AnimatorObserver
         virtual void onAnimatorBegin(tl::AnimatorBase* animator);

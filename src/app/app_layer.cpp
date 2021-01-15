@@ -32,4 +32,43 @@ namespace app {
         }
         canvas.pop();
     }
+
+    void Layer::onKeyPress(int key) {
+        std::vector<Node*>::iterator it;
+        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+            Node* node = *it;
+            node->onKeyPress(key);
+        }
+    }
+
+    void Layer::onMouseDown(int x, int y) {
+        std::vector<Node*>::iterator it;
+        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+            Node* node = *it;
+            if (node->inBounds(x, y)) {
+                node->onMouseDown(x, y);
+            }
+        }
+    }
+
+    void Layer::onMouseMove(int x, int y) {
+        std::vector<Node*>::iterator it;
+        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+            Node* node = *it;
+            if (node->inBounds(x, y)) {
+                node->onMouseMove(x, y);
+            }
+        }
+    }
+
+    void Layer::onMouseUp(int x, int y) {
+        std::vector<Node*>::iterator it;
+        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+            Node* node = *it;
+            if (node->inBounds(x, y)) {
+                node->onMouseUp(x, y);
+            }
+        }
+    }
+
 }

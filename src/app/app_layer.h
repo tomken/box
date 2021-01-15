@@ -20,7 +20,11 @@ namespace app {
         void resst();
         
     public:
-        void onDraw(Canvas& canvas);
+        virtual void onDraw(Canvas& canvas);
+        virtual void onKeyPress(int key);
+        virtual void onMouseDown(int x, int y);
+        virtual void onMouseMove(int x, int y);
+        virtual void onMouseUp(int x, int y);
         
     private:
         AppContext*        _ctx;
