@@ -22,7 +22,7 @@ namespace line {//命名空间 盒子
         
     }
     
-    void Game::onPress(int x, int y) {
+    void Game::onMouseDown(int x, int y) {
         _startX = x;
         _startY = y;
         
@@ -41,7 +41,7 @@ namespace line {//命名空间 盒子
         }
     }
     
-    void Game::onMove(int x, int y) {
+    void Game::onMouseMove(int x, int y) {
         if (!isPress)
             return;
         
@@ -106,7 +106,7 @@ namespace line {//命名空间 盒子
         }
     }
     
-    void Game::onRelease(int x, int y) {
+    void Game::onMouseUp(int x, int y) {
         if (!hasFlag) {
             isFirst = !isFirst;
         }
@@ -169,20 +169,22 @@ namespace line {//命名空间 盒子
         image->setPath("begin.png");
         layer->addNode(image);
         
-        x = (_width  - 100) / 2;
+        x = (_width  - 200) / 2;
         y = _height - 80;
         
         Shape* shape = new Shape();
         shape->setPosition(x, y);
-        shape->setSize(100, 40);
-        shape->setFillColor(Color::Crimson);
+        shape->setSize(200, 40);
+        shape->setFillColor(Color(41, 98, 255));
+        shape->setRadius(20);
         layer->addNode(shape);
         
-        Label* label = new Label();
+        Button* label = new Button();
         label->setPosition(x, y);
-        label->setSize(100, 40);
-        label->setText("Peter");
-        label->setTextColor(Color::Crimson);
+        label->setSize(200, 40);
+        label->setText("Peter 出品");
+//        label->setFontName("sans-bold");
+        label->setTextColor(Color(187, 222, 251));
         layer->addNode(label);
         
         _start->addLayer(layer);

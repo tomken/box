@@ -191,8 +191,11 @@ namespace app {
         nvgText(vg, l, t, text.c_str(), nullptr);
     }
     
-    void Canvas::beginPath(float* m) {
+    void Canvas::applyMatrix(float* m) {
         nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
+    }
+    
+    void Canvas::beginPath() {
         nvgBeginPath(vg);
     }
     

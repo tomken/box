@@ -27,11 +27,15 @@ namespace app {
         }
         
         void setStrokeWidth(float w) {
-            _strokeWidth = w;
+            _strokeWidth = w * X_SCALE;
         }
         
         void setFillColor(Color c) {
             _fillColor = c;
+        }
+        
+        void setRadius(float radius) {
+            _radius = radius * X_SCALE;
         }
         
     public: // for Node;
@@ -42,6 +46,7 @@ namespace app {
         Color      _fillColor;
         Color      _strokeColor;
         float      _strokeWidth;
+        float      _radius;
          
     };
     

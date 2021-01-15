@@ -28,10 +28,10 @@ namespace gobang {
         
     }
 
-    void Game::onPress(int x, int y) {
+    void Game::onMouseDown(int x, int y) {
     }
 
-    void Game::onMove(int x, int y) {
+    void Game::onMouseMove(int x, int y) {
         if (isFinished) return;
         
         int cx, cy;
@@ -40,7 +40,7 @@ namespace gobang {
         }
     }
 
-    void Game::onRelease(int x, int y) {
+    void Game::onMouseUp(int x, int y) {
         if (currentScene() == _start) {
             if (_first->inBounds(x, y)) {
                 isFirst = true;

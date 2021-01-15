@@ -3,6 +3,7 @@
 #include "window_five.h"
 #include "window_link.h"
 #include "window_line.h"
+#include "window_english.h"
 
 #include "app/app_init.h"
 
@@ -16,11 +17,12 @@ int main(int argc, char* argv[]) {
 //    test_script();
 //    exit(0);
     
-     line::Game win;
+//     line::Game win;
 //    box::Game win;
 //    boxes::Game win;
 //    gobang::Game win;
 //    link::Game win;
+    english::Game win;
     win.run();
 
     return 0;

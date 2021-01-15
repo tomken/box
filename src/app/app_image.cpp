@@ -18,28 +18,11 @@ namespace app {
     }
     
     void Image::onDraw(Canvas& canvas) {
-        float a = nvgDegToRad(_angle);
-        float matrix[6];
-        nvgTransformIdentity(transform);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformTranslate(matrix, -_w/2, -_h/2);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformRotate(matrix, a);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformScale(matrix, _scale, _scale);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
-        nvgTransformMultiply(transform, matrix);
+        calcMatrix();
         
         canvas.push();
-        canvas.beginPath(transform);
+        canvas.applyMatrix(transform);
+        canvas.beginPath();
         
         if (_image == 0) {
             _image = canvas.loadImage(_path);

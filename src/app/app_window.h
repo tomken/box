@@ -45,12 +45,10 @@ namespace app {
     public:
         virtual void onCreate() = 0;
         
-        virtual void onPress(int x, int y) {;}
-        virtual void onMove(int x, int y) {;}
-        virtual void onRelease(int x, int y) {;}
-        
-        virtual void onKeyPress(int key) {;}
-        virtual void onDraw(Canvas& canvas) {;}
+        virtual void onMouseDown(int x, int y);
+        virtual void onMouseMove(int x, int y);
+        virtual void onMouseUp(int x, int y);
+        virtual void onKeyPress(int key);
         
     protected:
         void alphaTo(float alpha);

@@ -84,7 +84,8 @@ namespace app {
         void drawText(const std::string& text, float x, float y, float w, float h);
         
     public:
-        void beginPath(float* matrix);
+        void applyMatrix(float* matrix);
+        void beginPath();
         void moveTo(float x, float y);
         void lineTo(float x, float y);
         void bezierTo(float c1x, float c1y, float c2x, float c2y, float x, float y);

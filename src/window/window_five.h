@@ -23,9 +23,9 @@ namespace gobang {
         virtual void onCreate();
         
     public:
-        virtual void onPress(int x, int y);
-        virtual void onMove(int x, int y);
-        virtual void onRelease(int x, int y);
+        virtual void onMouseDown(int x, int y);
+        virtual void onMouseMove(int x, int y);
+        virtual void onMouseUp(int x, int y);
         virtual void onKeyPress(int key);
         
     private:

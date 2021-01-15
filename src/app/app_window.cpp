@@ -318,16 +318,16 @@ static void _cursor_cb(GLFWwindow* window, double x, double y) {
         xpos = x;
         ypos = y;
         app::Window* win = (app::Window*)glfwGetWindowUserPointer(window);
-        win->onMove(x, y);
+        win->onMouseMove(x, y);
     }
 }
 
 static void _mouse_cb(GLFWwindow* window, int button, int action, int mods) {
     app::Window* win = (app::Window*)glfwGetWindowUserPointer(window);
     if (action == GLFW_PRESS) {
-        win->onPress(xpos, ypos);
+        win->onMouseDown(xpos, ypos);
     } else if (action == GLFW_RELEASE) {
-        win->onRelease(xpos, ypos);
+        win->onMouseUp(xpos, ypos);
     }
 }
 
@@ -392,6 +392,7 @@ namespace app {
         
         _isRequesed = false;
         _isPlaying  = false;
+        _scene      = NULL;
         
         _canvas = new Canvas();
     }
@@ -504,6 +505,30 @@ namespace app {
         _isPlaying = _animatoies.size() > 0;
         if (_isPlaying) {
             requestRefresh();
+        }
+    }
+    
+    void Window::onMouseDown(int x, int y) {
+        if (_scene) {
+            _scene->onMouseDown(x, y);
+        }
+    }
+    
+    void Window::onMouseMove(int x, int y) {
+        if (_scene) {
+            _scene->onMouseMove(x, y);
+        }
+    }
+    
+    void Window::onMouseUp(int x, int y) {
+        if (_scene) {
+            _scene->onMouseUp(x, y);
+        }
+    }
+    
+    void Window::onKeyPress(int key) {
+        if (_scene) {
+            _scene->onKeyPress(key);
         }
     }
 

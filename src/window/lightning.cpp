@@ -12,11 +12,11 @@ namespace app {
     }
     
     void Lightning::onDraw(Canvas& canvas) {
-        nvgTransformIdentity(transform);
+        calcMatrix();
         
         canvas.push();
-//        canvas.translate(_x, _y);
-        canvas.beginPath(transform);
+        canvas.applyMatrix(transform);
+        canvas.beginPath();
         
         Color sc = _strokeColor;
         sc.setAlpha(_alpha * _strokeColor.alpha());

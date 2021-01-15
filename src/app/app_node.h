@@ -111,7 +111,7 @@ namespace app {
         }
         
     public: // for animator
-        void fadeIn();
+        void fadeIn(float to = 1.0f);
         void fadeOut(float to = 0.0f);
         void rotationTo(int angle);
         void animate(tl::AnimationType type, float from, float to, int duration);
@@ -128,6 +128,9 @@ namespace app {
         virtual void onAnimatorRangeChange(tl::AnimatorBase*, float);
         virtual void onAnimatorEnd(tl::AnimatorBase*);
         virtual void onAnimatorCancel(tl::AnimatorBase*) {;}
+        
+    protected:
+        void calcMatrix();
         
     protected:
         AppContext* _ctx;

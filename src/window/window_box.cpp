@@ -11,14 +11,14 @@ namespace box {//命名空间 盒子
     Game::Game() : Window(col * boxSize, row * boxSize) {
         clickCount = 0;//点击次数
         isFinished = false;//是否完成，否
-        ignorEvent = false;//不知道
+        ignorEvent = false;//忽略事件
     }
 
     Game::~Game() {
         
     }
 
-    void Game::onPress(int x, int y) {
+    void Game::onMouseDown(int x, int y) {
         isPress = true;
         
         if (currentScene() == _start) {
@@ -36,7 +36,7 @@ namespace box {//命名空间 盒子
         }
     }
 
-    void Game::onMove(int x, int y) {
+    void Game::onMouseMove(int x, int y) {
         if (isFinished || ignorEvent)
             return;
         
@@ -45,7 +45,7 @@ namespace box {//命名空间 盒子
         }
     }
 
-    void Game::onRelease(int x, int y) {
+    void Game::onMouseUp(int x, int y) {
         isPress = false;
         if (isFinished || ignorEvent) {
             ignorEvent = false;

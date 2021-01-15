@@ -6,6 +6,7 @@
 #include "app/app_scene.h"
 #include "app/app_layer.h"
 #include "app/app_label.h"
+#include "app/app_button.h"
 #include "app/app_image.h"
 #include "app/app_shape.h"
 

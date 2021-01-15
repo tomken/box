@@ -23,17 +23,17 @@ namespace link {
         delete _engine;
     }
     
-    void Game::onPress(int x, int y) {
+    void Game::onMouseDown(int x, int y) {
         if (_state == None) {
         }
     }
     
-    void Game::onMove(int x, int y) {
+    void Game::onMouseMove(int x, int y) {
         if (_state == None) {
         }
     }
     
-    void Game::onRelease(int x, int y) {
+    void Game::onMouseUp(int x, int y) {
         if (currentScene() == _start) {
             resetGame();
             changeScene("game");

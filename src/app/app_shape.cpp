@@ -6,6 +6,8 @@ namespace app {
     
     Shape::Shape() {
         _type = ShapeTypeRect;
+        _radius      = 0.0f;
+        _strokeWidth = 1.0f;
     }
     
     Shape::~Shape() {
@@ -13,11 +15,11 @@ namespace app {
     }
     
     void Shape::onDraw(Canvas& canvas) {
-        nvgTransformIdentity(transform);
+        calcMatrix();
         
         canvas.push();
-        canvas.translate(_x, _y);
-        canvas.beginPath(transform);
+        canvas.applyMatrix(transform);
+        canvas.beginPath();
         
         Color fc = _fillColor;
         fc.setAlpha(_alpha * _fillColor.alpha());
@@ -26,7 +28,7 @@ namespace app {
         sc.setAlpha(_alpha * _strokeColor.alpha());
         
         if (_type == ShapeTypeRect) {
-            canvas.drawRect(0, 0, _w, _h);
+            canvas.drawRoundedRect(0, 0, _w, _h, _radius);
         } else if (_type == ShapeTypeCircle) {
             canvas.drawEllipse(_w / 2, _h / 2, _w / 2, _h / 2);
         }

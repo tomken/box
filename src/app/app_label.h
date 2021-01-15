@@ -23,6 +23,10 @@ namespace app {
             _size = size;
         }
         
+        void setFontName(const std::string& name) {
+            _font = name;
+        }
+        
         void setText(const std::string& text) {
             _text = text;
         }
@@ -33,6 +37,7 @@ namespace app {
         
     private:
         std::string  _text;
+        std::string  _font;
         Color        _color;
         float        _size;
         

@@ -35,4 +35,33 @@ namespace app {
             (*it)->onDraw(canvas);
         }
     }
+    
+    void Scene::onKeyPress(int key) {
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); ++it) {
+            (*it)->onKeyPress(key);
+        }
+    }
+    
+    void Scene::onMouseDown(int x, int y) {
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); ++it) {
+            (*it)->onMouseDown(x, y);
+        }
+    }
+    
+    void Scene::onMouseMove(int x, int y) {
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); ++it) {
+            (*it)->onMouseMove(x, y);
+        }
+    }
+    
+    void Scene::onMouseUp(int x, int y) {
+        std::vector<Layer*>::iterator it;
+        for (it = _layers.begin(); it != _layers.end(); ++it) {
+            (*it)->onMouseUp(x, y);
+        }
+    }
+    
 }

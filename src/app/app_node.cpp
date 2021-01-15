@@ -16,12 +16,12 @@ namespace app {
         animator->removeObserver(this);
     }
     
-    void Node::fadeIn() {
+    void Node::fadeIn(float to) {
         tl::AnimatorDefault* animator = tl::AnimatorCentre::obtain(this);
         if (!animator->isFinished())
             return;
             
-        animator->setValues(0.0, 1.0);
+        animator->setValues(_alpha, to);
         animator->addObserver(this);
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeAlpha);
@@ -34,7 +34,7 @@ namespace app {
         if (!animator->isFinished())
             return;
         
-        animator->setValues(1.0, to);
+        animator->setValues(_alpha, to);
         animator->addObserver(this);
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeAlpha);
@@ -92,4 +92,28 @@ namespace app {
             // setVisible(true);
         }
     }
+    
+    void Node::calcMatrix() {
+        float a = nvgDegToRad(_angle);
+        
+        float matrix[6];
+        nvgTransformIdentity(transform);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, -_w/2, -_h/2);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformRotate(matrix, a);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformScale(matrix, _scale, _scale);
+        nvgTransformMultiply(transform, matrix);
+        
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
+        nvgTransformMultiply(transform, matrix);
+    }
+    
 }

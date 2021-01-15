@@ -182,6 +182,7 @@ namespace app {
         ~Callable() { delete _func; }
 
         bool isNull() const { return !_func; }
+        bool isGood() const { return _func; }
 
         R operator()(A1 a1) { return _func->invoke(a1); }
         Callable& apply(void* thiz) { _func->apply(thiz); return *this; }
