@@ -1,17 +1,17 @@
 
 #include "window_box.h"
 
-namespace box {
+namespace box {//命名空间 盒子
 
-    static const int boxSize = 64;
+    static const int boxSize = 64;//一些不变的常数
     static const int col = 10;
     static const int row = 10;
     static const int count = col * row;
 
     Game::Game() : Window(col * boxSize, row * boxSize) {
-        clickCount = 0;
-        isFinished = false;
-        ignorEvent = false;
+        clickCount = 0;//点击次数
+        isFinished = false;//是否完成，否
+        ignorEvent = false;//不知道
     }
 
     Game::~Game() {
@@ -78,8 +78,7 @@ namespace box {
         }
     }
 
-    void Game::onKeyPress(int key) {
-        ren->setPosition(renX, renY);
+    void Game::onKeyPress(int key) {//键盘事件
     }
 
     void Game::onCreate() {

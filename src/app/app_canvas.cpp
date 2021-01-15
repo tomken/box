@@ -8,10 +8,17 @@
 
 #define NV_COLOR(c) nvgRGBA(c.red(), c.green(), c.blue(), c.alpha())
 
+const char* sans_font = "/Users/zy/peter/fonts/SourceHanSansCN-Light.otf";
+const char* sans_bold_font = "/Users/zy/peter/fonts/SourceHanSansCN-Bold.otf";
+
 namespace app {
     
     Canvas::Canvas() {
         vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        
+        nvgCreateFont(vg, "sans", sans_font);
+        nvgCreateFont(vg, "sans-bold", sans_bold_font);
+        nvgFontFace(vg, "sans");
     }
 
     Canvas::~Canvas() {
@@ -166,6 +173,22 @@ namespace app {
     
     void Canvas::drawEllipse(float cx, float cy, float rx, float ry) {
         nvgEllipse(vg, cx, cy, rx, ry);
+    }
+    
+    void Canvas::setFontSize(float size) {
+        nvgFontSize(vg, size);
+    }
+    
+    void Canvas::setFontName(const std::string& name) {
+        nvgFontFace(vg, name.c_str());
+    }
+    
+    void Canvas::drawText(const std::string& text, float x, float y, float w, float h) {
+        float tw = nvgTextBounds(vg, 0,0, text.c_str(), nullptr, nullptr);
+        float l = x - tw * 0.5 + w * 0.5;
+        float t = y - 1 + h * 0.5;
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+        nvgText(vg, l, t, text.c_str(), nullptr);
     }
     
     void Canvas::beginPath(float* m) {

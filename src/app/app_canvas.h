@@ -78,6 +78,11 @@ namespace app {
         void drawCircel(float x, float y, float r);
         void drawEllipse(float cx, float cy, float rx, float ry);
         
+    public: // for text
+        void setFontSize(float size);
+        void setFontName(const std::string& name);
+        void drawText(const std::string& text, float x, float y, float w, float h);
+        
     public:
         void beginPath(float* matrix);
         void moveTo(float x, float y);
