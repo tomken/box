@@ -76,13 +76,13 @@ namespace app {
     };
     
     Audio::Audio(const char* path) {
-        Path pp(ROOT_PATH);
-        pp.join("images");
-        pp.join(path);
-        const char* realPath = pp.toString().data();
+//        Path pp(ROOT_PATH);
+//        pp.join("images");
+//        pp.join(path);
+//        const char* realPath = pp.toString().data();
         
         _impl = new AudioImpl();
-        _impl->init(realPath);
+        _impl->init(path);
     }
     
     Audio::~Audio() {

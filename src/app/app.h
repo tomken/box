@@ -9,6 +9,7 @@
 #include "app/app_button.h"
 #include "app/app_image.h"
 #include "app/app_shape.h"
+#include "app/app_path.h"
 
 #include "audio/app_audio.h"
 
