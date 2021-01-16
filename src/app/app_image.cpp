@@ -19,8 +19,6 @@ namespace app {
     
     void Image::onDraw(Canvas& canvas) {
         calcMatrix();
-        
-        canvas.push();
         canvas.applyMatrix(transform);
         canvas.beginPath();
         
@@ -43,8 +41,6 @@ namespace app {
             canvas.setFillPaint(_paint);
             canvas.fill();
         }
-        
-        canvas.pop();
     }
     
 }

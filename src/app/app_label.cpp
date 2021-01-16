@@ -15,8 +15,12 @@ namespace app {
     }
     
     void Label::onDraw(Canvas& canvas) {
+        Shape::onDraw(canvas);
+        onDrawText(canvas);
+    }
+    
+    void Label::onDrawText(Canvas& canvas) {
         calcMatrix();
-        
         canvas.push();
         canvas.applyMatrix(transform);
         canvas.beginPath();
@@ -27,8 +31,6 @@ namespace app {
             canvas.setFontSize(_size);
             canvas.drawText(_text, 0, 0, _w, _h);
         }
-        
         canvas.pop();
     }
-    
 }

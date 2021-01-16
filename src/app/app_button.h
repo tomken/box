@@ -17,7 +17,7 @@ namespace app {
         
     public:
         void setNormalColor(Color c) {
-            _normalColor = c;
+            _fillColor = c;
         }
         
         void setPressColor(Color c) {
@@ -35,7 +35,6 @@ namespace app {
         virtual void onMouseUp(int x, int y);
         
     private:
-        Color         _normalColor;
         Color         _pressColor;
         
         ButtonClickCb _clickCb;

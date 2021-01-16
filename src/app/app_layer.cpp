@@ -6,14 +6,14 @@ namespace app {
     void Layer::updateContext(AppContext* ctx) {
         _ctx = ctx;
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             (*it)->updateContext(ctx);
         }
     }
     
     void Layer::resst() {
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             Node* node = *it;
             delete node;
         }
@@ -22,20 +22,18 @@ namespace app {
     }
     
     void Layer::onDraw(Canvas& canvas) {
-        canvas.push();
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             Node* node = *it;
             if (node->isVisible()) {
                 node->onDraw(canvas);
             }
         }
-        canvas.pop();
     }
 
     void Layer::onKeyPress(int key) {
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             Node* node = *it;
             node->onKeyPress(key);
         }
@@ -53,7 +51,7 @@ namespace app {
 
     void Layer::onMouseMove(int x, int y) {
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             Node* node = *it;
             if (node->inBounds(x, y)) {
                 node->onMouseMove(x, y);
@@ -63,7 +61,7 @@ namespace app {
 
     void Layer::onMouseUp(int x, int y) {
         std::vector<Node*>::iterator it;
-        for (it = _nodes.begin(); it != _nodes.end(); it++) {
+        for (it = _nodes.begin(); it != _nodes.end(); ++it) {
             Node* node = *it;
             if (node->inBounds(x, y)) {
                 node->onMouseUp(x, y);

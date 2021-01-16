@@ -41,7 +41,7 @@ namespace app {
     public: // for Node;
         virtual void onDraw(Canvas& canvas);
         
-    private:
+    protected:
         ShapeType  _type;
         Color      _fillColor;
         Color      _strokeColor;

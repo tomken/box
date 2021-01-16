@@ -4,7 +4,6 @@
 namespace app {
     
     Button::Button() {
-        _normalColor = Color::Red;
         _pressColor = Color(255, 160, 0);
     }
     
@@ -13,10 +12,9 @@ namespace app {
     }
     
     void Button::onDraw(Canvas& canvas) {
+        Color color = (_isPress) ? _pressColor : _fillColor;
+        
         calcMatrix();
-        
-        Color color = (_isPress) ? _pressColor : _normalColor;
-        
         canvas.push();
         canvas.applyMatrix(transform);
         canvas.drawRoundedRect(0, 0, _w, _h, 15);
@@ -24,7 +22,7 @@ namespace app {
         canvas.fill();
         canvas.pop();
         
-        Label::onDraw(canvas);
+        onDrawText(canvas);
     }
     
     void Button::onMouseDown(int x, int y) {

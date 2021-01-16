@@ -48,6 +48,7 @@ namespace english {
         Button*   _continue;
         
         bool      _off;
+        bool      _door;
     private:
         int                _wordIndex;
         int                _rightIndex;

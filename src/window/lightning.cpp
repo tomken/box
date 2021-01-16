@@ -13,8 +13,6 @@ namespace app {
     
     void Lightning::onDraw(Canvas& canvas) {
         calcMatrix();
-        
-        canvas.push();
         canvas.applyMatrix(transform);
         canvas.beginPath();
         
@@ -35,8 +33,6 @@ namespace app {
             canvas.setStrokeWidth(_strokeWidth);
             canvas.stroke();
         }
-        
-        canvas.pop();
     }
     
     void Lightning::generate() {

@@ -2,14 +2,14 @@
 #ifndef __APP_LABEL_H__
 #define __APP_LABEL_H__
 
-#include "app_node.h"
+#include "app_shape.h"
 #include "app_point.h"
 
 #include <vector>
 
 namespace app {
     
-    class Label : public Node {
+    class Label : public Shape {
     public:
         Label();
         ~Label();
@@ -31,9 +31,11 @@ namespace app {
             _text = text;
         }
         
-        
     public: // for Node;
         virtual void onDraw(Canvas& canvas);
+        
+    protected:
+        virtual void onDrawText(Canvas& canvas);
         
     private:
         std::string  _text;
