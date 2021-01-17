@@ -3,6 +3,14 @@
 
 namespace app {
     
+    Layer::Layer() {
+        _visible = true;
+    }
+    
+    Layer::~Layer() {
+        
+    }
+    
     void Layer::updateContext(AppContext* ctx) {
         _ctx = ctx;
         std::vector<Node*>::iterator it;

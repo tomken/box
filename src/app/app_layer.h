@@ -9,6 +9,10 @@ namespace app {
     class Canvas;
     class Layer {
     public:
+        Layer();
+        ~Layer();
+        
+    public:
         void addNode(Node* node) {
             node->updateContext(_ctx);
             _nodes.push_back(node);
@@ -18,6 +22,14 @@ namespace app {
         
         void updateContext(AppContext* ctx);
         void resst();
+        
+        void setVisible(bool visible) {
+            _visible = visible;
+        }
+        
+        bool isVisible() const {
+            return _visible;
+        }
         
     public:
         virtual void onDraw(Canvas& canvas);
@@ -29,6 +41,7 @@ namespace app {
     private:
         AppContext*        _ctx;
         std::vector<Node*> _nodes;
+        bool               _visible;
     };
     
 }

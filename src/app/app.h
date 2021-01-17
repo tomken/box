@@ -5,11 +5,12 @@
 #include "app/app_window.h"
 #include "app/app_scene.h"
 #include "app/app_layer.h"
-#include "app/app_label.h"
-#include "app/app_button.h"
-#include "app/app_image.h"
-#include "app/app_shape.h"
 #include "app/app_path.h"
+
+#include "widgets/app_label.h"
+#include "widgets/app_button.h"
+#include "widgets/app_image.h"
+#include "widgets/app_shape.h"
 
 #include "audio/app_audio.h"
 

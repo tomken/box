@@ -33,19 +33,24 @@ namespace app {
         }
         
         canvas.fill();
+        canvas.pop();
         
         if (_strokeWidth > 0.01f) {
-            canvas.applyMatrix(transform);
-            
-            Color sc = _strokeColor;
-            sc.setAlpha(_alpha * _strokeColor.alpha());
-            
-            canvas.setStrokeColor(sc);
-            canvas.setStrokeWidth(_strokeWidth);
-            canvas.stroke();
+//            calcMatrix();
+//            
+//            canvas.push();
+//            canvas.applyMatrix(transform);
+//            
+//            Color sc = _strokeColor;
+//            sc.setAlpha(_alpha * _strokeColor.alpha());
+//            
+//            canvas.setStrokeColor(sc);
+//            canvas.setStrokeWidth(_strokeWidth);
+//            canvas.stroke();
+//            canvas.pop();
         }
         
-        canvas.pop();
+        
     }
     
 }
