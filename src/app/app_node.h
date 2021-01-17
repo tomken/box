@@ -24,6 +24,7 @@ namespace app {
             _uuid = UUID::make();
             _uuid._data = this;
             
+            _data     = 0;
             _flag     = 0;
             _visible  = true;
             _alpha    = 1.0;
@@ -39,6 +40,14 @@ namespace app {
         
         UUID& uuid() {
             return _uuid;
+        }
+        
+        void setTag(const std::string& tag) {
+            _tag = tag;
+        }
+        
+        const std::string& tag() {
+            return _tag;
         }
         
     public:
@@ -58,12 +67,12 @@ namespace app {
             _y = y * Y_SCALE;
         }
         
-        void setPosition(float x, float y) {
+        virtual void setPosition(float x, float y) {
             _x = x * X_SCALE;
             _y = y * Y_SCALE;
         }
         
-        void setSize(float w, float h) {
+        virtual void setSize(float w, float h) {
             _w = w * X_SCALE;
             _h = h * Y_SCALE;
         }
@@ -110,6 +119,14 @@ namespace app {
             return (_flag & f);
         }
         
+        void setUserData(void* data) {
+            _data = data;
+        }
+        
+        void* getUserData() const {
+            return _data;
+        }
+        
     public: // for animator
         void fadeIn(float to = 1.0f);
         void fadeOut(float to = 0.0f);
@@ -130,19 +147,20 @@ namespace app {
         virtual void onAnimatorCancel(tl::AnimatorBase*) {;}
         
     protected:
-        void calcMatrix();
+        void calcMatrix(Canvas& canvas);
         
     protected:
         AppContext* _ctx;
+        std::string _tag;
+        
         UUID  _uuid;
         float _x;
         float _y;
         float _w;
         float _h;
         
-        float transform[6];
-        
         int   _flag;
+        void* _data;
         
         float _alpha;
         float _angle;

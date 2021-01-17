@@ -20,9 +20,8 @@ namespace app {
     }
     
     void Label::onDrawText(Canvas& canvas) {
-        calcMatrix();
         canvas.push();
-        canvas.applyMatrix(transform);
+        calcMatrix(canvas);
         canvas.beginPath();
         
         if (_text.size() > 0) {

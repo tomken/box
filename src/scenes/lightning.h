@@ -20,7 +20,7 @@ namespace app {
         }
         
         void setStrokeWidth(float w) {
-            _strokeWidth = w;
+            _strokeWidth = w * X_SCALE;
         }
         
         void reset() {

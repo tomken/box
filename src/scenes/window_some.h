@@ -19,7 +19,10 @@ namespace some {
         
     private:
         void resetGame();
-        void initGame();
+        void initGame1();
+        
+    private:
+        void initSprite();
         
     private:
         void menu();
@@ -42,20 +45,23 @@ namespace some {
         
     private:
 //        Scene*  _game;
-        Button*  _game1;
-        Button*  _start;
-        Button*  _run;
-        Button*  _kill;
-        Button*  _live;
-        Button*  _resetGame;
+        Button*        _game1;
+        Button*        _start;
+        Button*        _run;
+        Button*        _kill;
+        Button*        _live;
+        Button*        _resetGame;
         
-        Label*   _liveTotal;
-        Label*   _gameOver;
+        Label*         _liveTotal;
+        Label*         _gameOver;
         
-        bool     _click;
+        ImageButton*   _game2;
         
-        int      _life;
-        int      _oldlife;
+        bool           _click;
+        
+        int            _life;
+        int            _oldlife;
+        Sprite*        _sans;
     };
 }
 

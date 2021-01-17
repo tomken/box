@@ -34,7 +34,7 @@ namespace app {
         virtual void onMouseMove(int x, int y);
         virtual void onMouseUp(int x, int y);
         
-    private:
+    protected:
         Color         _pressColor;
         
         ButtonClickCb _clickCb;

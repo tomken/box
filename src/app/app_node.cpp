@@ -26,7 +26,7 @@ namespace app {
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeAlpha);
         animator->setUserData((void*)0x1010);
-        context().runAnimation(animator);
+        context().requestRunAnimation(animator);
     }
     
     void Node::fadeOut(float to) {
@@ -39,7 +39,7 @@ namespace app {
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeAlpha);
         animator->setUserData((void*)0x1010);
-        context().runAnimation(animator);
+        context().requestRunAnimation(animator);
     }
     
     void Node::rotationTo(int angle) {
@@ -51,7 +51,7 @@ namespace app {
         animator->addObserver(this);
         animator->setDuration(200);
         animator->setType(tl::AnimationTypeRotation);
-        context().runAnimation(animator);
+        context().requestRunAnimation(animator);
     }
     
     void Node::animate(tl::AnimationType type, float from, float to, int duration) {
@@ -63,7 +63,7 @@ namespace app {
         animator->addObserver(this);
         animator->setDuration(duration);
         animator->setType(type);
-        context().runAnimation(animator);
+        context().requestRunAnimation(animator);
     }
     
     void Node::onAnimatorBegin(tl::AnimatorBase* animator) {
@@ -93,27 +93,35 @@ namespace app {
         }
     }
     
-    void Node::calcMatrix() {
+    void Node::calcMatrix(Canvas& canvas) {
         float a = nvgDegToRad(_angle);
+        canvas.resetTransform();
+        canvas.translate(-_w/2, -_h/2);
+        canvas.rotate(a);
+        canvas.scale(_scale, _scale);
+        canvas.translate(_w/2 + _x, _h/2 + _y);
         
-        float matrix[6];
-        nvgTransformIdentity(transform);
+//        printf("%s x=%0.2f, y=%0.2f, w=%0.2f, h=%0.2f\n",
+//               _tag.c_str(), _x, _y, _w, _h);
         
-        nvgTransformIdentity(matrix);
-        nvgTransformTranslate(matrix, -_w/2, -_h/2);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformRotate(matrix, a);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformScale(matrix, _scale, _scale);
-        nvgTransformMultiply(transform, matrix);
-        
-        nvgTransformIdentity(matrix);
-        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
-        nvgTransformMultiply(transform, matrix);
+//        float matrix[6];
+//        nvgTransformIdentity(transform);
+//        
+//        nvgTransformIdentity(matrix);
+//        nvgTransformTranslate(matrix, -_w/2, -_h/2);
+//        nvgTransformMultiply(transform, matrix);
+//        
+//        nvgTransformIdentity(matrix);
+//        nvgTransformRotate(matrix, a);
+//        nvgTransformMultiply(transform, matrix);
+//        
+//        nvgTransformIdentity(matrix);
+//        nvgTransformScale(matrix, _scale, _scale);
+//        nvgTransformMultiply(transform, matrix);
+//        
+//        nvgTransformIdentity(matrix);
+//        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
+//        nvgTransformMultiply(transform, matrix);
     }
     
 }

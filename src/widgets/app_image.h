@@ -20,8 +20,8 @@ namespace app {
         }
         
         void setImageOffset(int x, int y) {
-            _imageX = x * X_SCALE;
-            _imageY = y * X_SCALE;
+            _imageX = x;
+            _imageY = y;
             _imageF = true;
         }
         

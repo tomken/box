@@ -209,7 +209,6 @@ namespace link {
         _light->setVisible(false);
         _light->addPoint(app::Point(100, 100));
         _light->addPoint(app::Point(200, 200));
-        _light->generate();
         _topLayer->addNode(_light);
         
         _state = None;
@@ -285,7 +284,6 @@ namespace link {
                     _light->addPoint(convert2point(_engine->corner2()));
                 }
                 _light->addPoint(convert2point(point));
-                _light->generate();
                 _light->animate(tl::AnimationTypeAlpha, 1.0f, 0.f, 800);
                 
                 _clearAudio->play();

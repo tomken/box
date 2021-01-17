@@ -18,10 +18,10 @@ namespace app {
     }
     
     void Image::onDraw(Canvas& canvas) {
-        calcMatrix();
-        canvas.applyMatrix(transform);
+        canvas.push();
+        calcMatrix(canvas);
         canvas.beginPath();
-        
+
         if (_image == 0) {
             _image = canvas.loadImage(_path);
             if (_image > 0) {
@@ -32,15 +32,15 @@ namespace app {
                 }
             }
         }
-        
+
         if (_image > 0) {
             _paint.setAlpha(_alpha);
-            
-            canvas.clip(0, 0, _w, _h);
             canvas.drawRect(0, 0, _w, _h);
             canvas.setFillPaint(_paint);
             canvas.fill();
         }
+        
+        canvas.pop();
     }
     
 }

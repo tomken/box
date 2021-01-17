@@ -408,6 +408,7 @@ namespace app {
     
     void Window::run() {
         glfwGetWindowContentScale(_win, &X_SCALE, &Y_SCALE);
+        
         onCreate();
         
         while (!glfwWindowShouldClose(_win)) {
@@ -447,10 +448,15 @@ namespace app {
     }
     
     void Window::changeScene(const std::string& name) {
+        if (_scene) {
+            _scene->onLeave();
+        }
+        
         std::map<std::string, Scene*>::iterator it;
         it = _scenes.find(name);
         if (it != _scenes.end()) {
             _scene = it->second;
+            _scene->onEnter();
         }
     }
     
@@ -482,7 +488,7 @@ namespace app {
         }
     }
     
-    void Window::runAnimation(tl::AnimatorBase* ai) {
+    void Window::requestRunAnimation(tl::AnimatorBase* ai) {
         ai->start();
         _animatoies.insert(ai);
         

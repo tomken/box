@@ -14,15 +14,15 @@ namespace app {
     void Button::onDraw(Canvas& canvas) {
         Color color = (_isPress) ? _pressColor : _fillColor;
         
-        calcMatrix();
         canvas.push();
-        canvas.applyMatrix(transform);
-        canvas.drawRoundedRect(0, 0, _w, _h, 15);
+        calcMatrix(canvas);
+        canvas.beginPath();
+        canvas.drawRoundedRect(0, 0, _w, _h, _radius);
         canvas.setFillColor(color);
         canvas.fill();
-        canvas.pop();
         
         onDrawText(canvas);
+        canvas.pop();
     }
     
     void Button::onMouseDown(int x, int y) {

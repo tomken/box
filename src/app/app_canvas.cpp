@@ -85,7 +85,7 @@ namespace app {
         int h;
         nvgImageSize(vg, image, &w, &h);
         paint._paint = nvgImagePattern(vg, ox, oy,
-                                       w * X_SCALE, h * X_SCALE, 0.0f, image, 1);
+                                       w, h, 0.0f, image, 1);
         return paint;
     }
     
@@ -192,7 +192,7 @@ namespace app {
     }
     
     void Canvas::applyMatrix(float* m) {
-        nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
+//        nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
     }
     
     void Canvas::beginPath() {

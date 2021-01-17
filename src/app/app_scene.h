@@ -22,11 +22,18 @@ namespace app {
         }
         
     public:
+        virtual void onEnter() {;}
+        virtual void onLeave() {;}
         virtual void onDraw(Canvas& canvas);
         virtual void onKeyPress(int key);
         virtual void onMouseDown(int x, int y);
         virtual void onMouseMove(int x, int y);
         virtual void onMouseUp(int x, int y);
+        
+    protected:
+        AppContext& context() {
+            return *_ctx;
+        }
         
     private:
         AppContext*           _ctx;

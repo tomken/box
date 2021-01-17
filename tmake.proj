@@ -7,7 +7,7 @@ def remove_src(str, list):
     if str in src:
       list.remove(src)
 
-folders = ['app', 'widgets', 'window', 'os', 'audio', 'glfw', 'nanovg']
+folders = ['app', 'widgets', 'scenes', 'os', 'audio', 'glfw', 'nanovg']
 folders.append('timeline')
 folders.append('quickjs')
 folders.append('box2d-lite')

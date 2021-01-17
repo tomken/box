@@ -15,10 +15,8 @@ namespace app {
     }
     
     void Shape::onDraw(Canvas& canvas) {
-        calcMatrix();
-        
         canvas.push();
-        canvas.applyMatrix(transform);
+        calcMatrix(canvas);
         canvas.beginPath();
         
         Color fc = _fillColor;
@@ -36,21 +34,17 @@ namespace app {
         canvas.pop();
         
         if (_strokeWidth > 0.01f) {
-//            calcMatrix();
-//            
-//            canvas.push();
-//            canvas.applyMatrix(transform);
-//            
-//            Color sc = _strokeColor;
-//            sc.setAlpha(_alpha * _strokeColor.alpha());
-//            
-//            canvas.setStrokeColor(sc);
-//            canvas.setStrokeWidth(_strokeWidth);
-//            canvas.stroke();
-//            canvas.pop();
+            canvas.push();
+            calcMatrix(canvas);
+            
+            Color sc = _strokeColor;
+            sc.setAlpha(_alpha * _strokeColor.alpha());
+            
+            canvas.setStrokeColor(sc);
+            canvas.setStrokeWidth(_strokeWidth);
+            canvas.stroke();
+            canvas.pop();
         }
-        
-        
     }
     
 }

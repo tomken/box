@@ -6,23 +6,23 @@
 
 #include <vector>
 
-using namespace app;
-
-namespace english {
+namespace app {
     
-    class Game : public Window {
+    class English : public Scene {
     public:
-        Game();
-        ~Game();
+        English();
+        ~English();
         
-    public:
-        virtual void onCreate();
+    public: // for Scene
+        virtual void onEnter();
+        virtual void onLeave();
         
     private:
         void onClick(Button* btn);
         
     private:
         void loadWordsFile();
+        void initUi();
         void doTest();
         void playWord();
         int random(int min, int max);
@@ -36,6 +36,8 @@ namespace english {
     private:
         Label*    _title;
         Label*    _tips;
+        
+        ImageButton*  _back;
         
         Image*    _rightImage;
         Image*    _wrongImage;

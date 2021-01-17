@@ -12,8 +12,8 @@ namespace app {
     }
     
     void Lightning::onDraw(Canvas& canvas) {
-        calcMatrix();
-        canvas.applyMatrix(transform);
+        canvas.push();
+        calcMatrix(canvas);
         canvas.beginPath();
         
         Color sc = _strokeColor;
@@ -33,13 +33,15 @@ namespace app {
             canvas.setStrokeWidth(_strokeWidth);
             canvas.stroke();
         }
+        
+        canvas.pop();
     }
     
     void Lightning::generate() {
         std::vector<Point>::iterator it;
         for (it = _points.begin(); it != _points.end(); ++it) {
             Point& pt = *it;
-            pt.x *= X_SCALE;
+            pt.x;
             pt.y *= Y_SCALE;
         }
     }

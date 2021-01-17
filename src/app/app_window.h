@@ -60,8 +60,24 @@ namespace app {
         virtual void onAnimatorRange(app::UUID uuid, const tl::AnimationInfo& info) {;}
         
     private: // for AppContext
+        void requestSetTitle(const std::string& text) {
+            setTitle(text);
+        }
+        
         virtual void requestRefresh();
-        virtual void runAnimation(tl::AnimatorBase*);
+        virtual void requestRunAnimation(tl::AnimatorBase*);
+        virtual void requestSetBackgroundColor(const Color& color) {
+            setBackgroundColor(color);
+        }
+        
+        void requestGetWindowSize(int& w, int& h) {
+            w = _width;
+            h = _height;
+        }
+        
+        void requestChangeScene(const char* name) {
+            changeScene(name);
+        }
         
     private:
         void runAllAnimation();

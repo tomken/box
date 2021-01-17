@@ -22,7 +22,7 @@ namespace some {//命名空间 盒子
     
     void Game::play(){
         _click = false;
-        initGame();
+        initGame1();
         startgame();
     }
     
@@ -46,7 +46,7 @@ namespace some {//命名空间 盒子
     void Game::resetGame() {
     }
     
-    void Game::initGame() {
+    void Game::initGame1() {
         _oldlife = _life = 100;
         Scene* scene = new Scene();
         Layer* layer = new Layer();
@@ -91,6 +91,14 @@ namespace some {//命名空间 盒子
         _game1->setNormalColor(Color::Black);
         _game1->setPressColor(Color(255, 255, 255, 50));
         
+        _game2 = new ImageButton();
+        _game2->setPosition(250, 50);
+        _game2->setSize(100, 70);
+        _game2->setClickCallback(app::bind(&Game::ongame1, this));//回调
+        _game2->setText("game2");
+        _game2->setTextColor(Color::Yellow);
+        _game2->setNormalColor(Color::Black);
+        _game2->setPressColor(Color(255, 255, 255, 50));
     }
     
     void Game::ongame1(Button* btn) {

@@ -11,6 +11,8 @@
 #include "widgets/app_button.h"
 #include "widgets/app_image.h"
 #include "widgets/app_shape.h"
+#include "widgets/app_image_button.h"
+
 
 #include "audio/app_audio.h"
 
