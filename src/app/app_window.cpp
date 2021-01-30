@@ -332,9 +332,6 @@ static void _mouse_cb(GLFWwindow* window, int button, int action, int mods) {
 }
 
 static void _key_cb(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    
     app::Window* win = (app::Window*)glfwGetWindowUserPointer(window);
     if (action == GLFW_PRESS) {
         win->onKeyPress(key);
@@ -536,6 +533,9 @@ namespace app {
         if (_scene) {
             _scene->onKeyPress(key);
         }
+        
+//        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+//            glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 
 }

@@ -192,7 +192,7 @@ namespace app {
     }
     
     void Canvas::applyMatrix(float* m) {
-//        nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
+        nvgTransform(vg, m[0], m[1], m[2], m[3], m[4], m[5]);
     }
     
     void Canvas::beginPath() {

@@ -17,6 +17,7 @@ namespace app {
         
     public:
         Label*     _author;
+        Sprite*    _test;
     };
     
 }

@@ -1,0 +1,4 @@
+error           错误
+fatal           致命的
+file            文件
+found           找到

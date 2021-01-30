@@ -6,34 +6,28 @@
 #include "app/app.h"
 #include "engine/boxes.h"
 
-using namespace app;
-
-namespace boxes {
+namespace app {
     
-    class Boxes;
-    class Game : public Window {
+    class PushBox : public Scene {
         typedef std::vector<Image*> BoxCol;
     public:
-        Game();
-        ~Game();
+        PushBox();
+        ~PushBox();
         
     public:
         virtual void onRelease(int x, int y);
-        virtual void onCreate();
+        virtual void onEnter();
+        virtual void onLeave() {;}
         
     public:
         virtual void onKeyPress(int key);
         
     private: // for callback
-        void init(const BoxInfo& info);
-        void update(const BoxInfo& info);
+        void init(const boxes::BoxInfo& info);
+        void update(const boxes::BoxInfo& info);
         void win();
         
     private:
-        //    void convert2xy(int index, int &x, int &y);
-        //    void convert2index(int x, int y, int &index);
-        //    int random(int min, int max);
-        
         void initStart();
         void initGame();
         void initEnd();
@@ -41,15 +35,17 @@ namespace boxes {
         void resetGame();
         
     private:
-        Boxes* boxes;
+        boxes::Boxes* boxes;
         Layer* _fixLayer;
         Layer* _boxLayer;
         Layer* _manLayer;
-        
-        Scene*  _start;
-        Scene*  _game;
-        Scene*  _end;
+
+        Image*  _bg;
         Image*  _man;
+        
+        int     _boxSize;
+        int     _offX;
+        int     _offY;
     };
     
 }

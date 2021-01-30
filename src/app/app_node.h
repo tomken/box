@@ -24,6 +24,7 @@ namespace app {
             _uuid = UUID::make();
             _uuid._data = this;
             
+            _ctx      = 0;
             _data     = 0;
             _flag     = 0;
             _visible  = true;

@@ -13,9 +13,10 @@ struct Items {
 const Items items[] = {
     { 50, 100, 200, 40, "English",   "english"},
     { 50, 160, 200, 40, "Push Box",  "push_box"},
-    { 50, 220, 200, 40, "Gobong",    "gobong"},
+    { 50, 220, 200, 40, "Gobong",    "five"},
     { 50, 280, 200, 40, "Link Link", "link_link"},
-    { 50, 340, 200, 40, "Test",      "test"},
+    { 50, 340, 200, 40, "Box",       "box"},
+    { 50, 400, 200, 40, "Some",      "some"},
 };
 
 namespace app {
@@ -58,9 +59,18 @@ namespace app {
             btn->setNormalColor(Color(144, 202, 249));
             btn->setPressColor(Color(66, 165, 245));
             btn->setClickCallback(app::bind(&Menu::onClick, this));
-            btn->setUserData((void*)(long)i);
+            btn->setUserData((void*)(long)i);            
             layer->addNode(btn);
         }
+        
+        _test = new Sprite();
+        _test->addImage("box.png", 1000);
+        _test->addImage("wall.png", 1000);
+        _test->addImage("tortoise.png", 1000);
+        _test->setPosition(750, 10);
+        _test->setSize(40, 40);
+        layer->addNode(_test);
+        _test->start();
         
         addLayer(layer);
     }
@@ -70,6 +80,7 @@ namespace app {
     }
     
     void Menu::onEnter() {
+        context().requestSetTitle("Box - game");
         context().requestSetBackgroundColor(Color(144, 202, 249));
 
         int w, h;

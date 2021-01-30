@@ -96,32 +96,36 @@ namespace app {
     void Node::calcMatrix(Canvas& canvas) {
         float a = nvgDegToRad(_angle);
         canvas.resetTransform();
-        canvas.translate(-_w/2, -_h/2);
-        canvas.rotate(a);
-        canvas.scale(_scale, _scale);
-        canvas.translate(_w/2 + _x, _h/2 + _y);
+//        canvas.translate(-_w/2, -_h/2);
+//        canvas.rotate(a);
+//        canvas.scale(_scale, _scale);
+//        canvas.translate(_w/2 + _x, _h/2 + _y);
         
 //        printf("%s x=%0.2f, y=%0.2f, w=%0.2f, h=%0.2f\n",
 //               _tag.c_str(), _x, _y, _w, _h);
         
-//        float matrix[6];
-//        nvgTransformIdentity(transform);
-//        
-//        nvgTransformIdentity(matrix);
-//        nvgTransformTranslate(matrix, -_w/2, -_h/2);
-//        nvgTransformMultiply(transform, matrix);
-//        
-//        nvgTransformIdentity(matrix);
-//        nvgTransformRotate(matrix, a);
-//        nvgTransformMultiply(transform, matrix);
-//        
-//        nvgTransformIdentity(matrix);
-//        nvgTransformScale(matrix, _scale, _scale);
-//        nvgTransformMultiply(transform, matrix);
-//        
-//        nvgTransformIdentity(matrix);
-//        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
-//        nvgTransformMultiply(transform, matrix);
+        float transform[6];
+
+        float matrix[6];
+        nvgTransformIdentity(transform);
+
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, -_w/2, -_h/2);
+        nvgTransformMultiply(transform, matrix);
+
+        nvgTransformIdentity(matrix);
+        nvgTransformRotate(matrix, a);
+        nvgTransformMultiply(transform, matrix);
+
+        nvgTransformIdentity(matrix);
+        nvgTransformScale(matrix, _scale, _scale);
+        nvgTransformMultiply(transform, matrix);
+
+        nvgTransformIdentity(matrix);
+        nvgTransformTranslate(matrix, _w/2 + _x, _h/2 + _y);
+        nvgTransformMultiply(transform, matrix);
+
+        canvas.applyMatrix(transform);
     }
     
 }

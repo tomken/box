@@ -12,15 +12,16 @@
 
 using namespace app;
 
-namespace gobang {
+namespace app {
     
-    class Game : public Window {
+    class Five : public Scene {
     public:
-        Game();
-        ~Game();
+        Five();
+        ~Five();
         
     public:
-        virtual void onCreate();
+        virtual void onEnter();
+        virtual void onLeave() {;}
         
     public:
         virtual void onMouseDown(int x, int y);
@@ -47,14 +48,11 @@ namespace gobang {
         void addPiece(int cx, int cy, bool isAi);
         void showResult(bool isYourWin);
         void showLocation(int cx, int cy);
+        void onClick(Button* btn);
         
     private:
-        Scene*  _start;
-        Image*  _first;
-        Image*  _last;
-        
-        Scene*  _game;
-        Scene*  _end;
+        Image*        _bg;
+        ImageButton*  _back;
         
         Layer*  _grid;
         Image*  _winer;

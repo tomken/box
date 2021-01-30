@@ -21,7 +21,8 @@ namespace app {
     class AudioImpl {
     public:
         AudioImpl() {
-            
+            isInitDecoder = false;
+            isInitDevice  = false;
         }
         
         ~AudioImpl() {
@@ -31,7 +32,10 @@ namespace app {
         
     public:
         bool init(const char* path) {
-            ma_decoder_uninit(&decoder);
+            if (isInitDecoder) {
+                ma_decoder_uninit(&decoder);
+                isInitDecoder = false;
+            }
             
             ma_result result;
             result = ma_decoder_init_file(path, NULL, &decoder);
@@ -39,7 +43,11 @@ namespace app {
                 return false;
             }
             
-            ma_device_uninit(&device);
+            isInitDecoder = true;
+            if (isInitDevice) {
+                ma_device_uninit(&device);
+                isInitDevice = false;
+            }
             
             config = ma_device_config_init(ma_device_type_playback);
             config.playback.format   = decoder.outputFormat;
@@ -53,6 +61,7 @@ namespace app {
                 return false;
             }
  
+            isInitDevice = true;
             return true;
         }
         
@@ -73,6 +82,9 @@ namespace app {
         ma_device_config config;
         ma_decoder       decoder;
         ma_device        device;
+        
+        bool             isInitDecoder;
+        bool             isInitDevice;
     };
     
     Audio::Audio(const char* path) {

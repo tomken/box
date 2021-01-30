@@ -1,15 +1,28 @@
-#include "window_box.h"
-#include "window_push_box.h"
-#include "window_five.h"
+
 #include "window_link.h"
 #include "window_line.h"
-#include "window_some.h"
 #include "window_moban.h"
 
 #include "scene_menu.h"
 #include "scene_english.h"
+#include "scene_some.h"
+#include "scene_box.h"
+#include "scene_push_box.h"
+#include "scene_five.h"
 
 #include "app/app_init.h"
+
+#include "linmath.h"
+
+static void testVector() {
+    vec2 v1 = {200, 100};
+    vec2 v2 = {200, 200};
+    vec3 v3;
+    vec2_sub(v3, v2, v1);
+    float len = vec2_len(v3);
+    printf("len=%f\n", len);
+    exit(0);
+}
 
 extern void test_audio();
 extern void test_image();
@@ -28,6 +41,10 @@ namespace game {
         virtual void onCreate() {
             addScene("menu", new Menu());
             addScene("english", new English());
+            addScene("some", new Some());
+            addScene("box", new Box());
+            addScene("push_box", new PushBox());
+            addScene("five", new Five());
             
             changeScene("menu");
         }
@@ -39,6 +56,7 @@ namespace game {
 
 
 int main(int argc, char* argv[]) {
+//    testVector();
 //    test_audio();
 //    test_image();
 //    test_bind();

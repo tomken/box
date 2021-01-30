@@ -1,33 +1,82 @@
 #include "app_sprite.h"
 
+extern uint64_t getTickCountUS();
+
 namespace app {
     
     Sprite::Sprite() {
-        _image1 = new Image;
-        _image2 = new Image;
-        _seeImage1 = false;
-    }
-    Sprite::~Sprite() {
-        delete _image1;
-        delete _image2;
+        _isRunning = false;
+        _totalTime = 0;
     }
     
-    void Sprite::setImage() {
-//        if(_seeImage1 == false){
-//            _seeImage1 = true;
-//            _image1->setVisible(false);
-//            _image2->setVisible(true);
-//        }else{
-//            _seeImage1 = false;
-//            _image1->setVisible(true);
-//            _image2->setVisible(false);
-//        }
+    Sprite::~Sprite() {
     }
-    void Sprite::onDraw(Canvas& canvas) {
-        if (_seeImage1) {
-            _image1->onDraw(canvas);
-        } else {
-            _image2->onDraw(canvas);
+    
+    void Sprite::addImage(const std::string& path, uint64_t delay) {
+        Image* image = new Image();
+        image->setPath(path);
+        image->setPosition(_x, _y);
+        image->setSize(_w, _h);
+        _images.push_back(image);
+        _delays.push_back(delay);
+        
+        _totalTime += (delay * 1000);
+    }
+    
+    void Sprite::setPosition(float x, float y) {
+        Node::setPosition(x, y);
+        
+        std::vector<Image*>::iterator it;
+        for (it = _images.begin(); it != _images.end(); ++it) {
+            (*it)->setPosition(x, y);
         }
     }
+    
+    void Sprite::setSize(float w, float h) {
+        Node::setSize(w, h);
+        
+        std::vector<Image*>::iterator it;
+        for (it = _images.begin(); it != _images.end(); ++it) {
+            (*it)->setSize(w, h);
+        }
+    }
+    
+    void Sprite::onDraw(Canvas& canvas) {
+        if (_images.size() == 0)
+            return;
+        
+        int idx = getIndex();
+        _images[idx]->onDraw(canvas);
+        
+        if (_isRunning) {
+            context().requestRefresh();
+        }
+    }
+    
+    void Sprite::start() {
+        _startTime = getTickCountUS();
+        _isRunning = true;
+    }
+    
+    void Sprite::stop() {
+        _isRunning = false;
+    }
+    
+    int Sprite::getIndex() {
+        _currentTime = getTickCountUS();
+        uint32_t t = (_currentTime - _startTime) % _totalTime;
+        
+        uint32_t s = 0;
+        int size = _delays.size();
+        for (int i=0; i<size; i++) {
+            uint64_t delay = _delays[i] * 1000;
+            if ((t >= s) && t < (s + delay))
+                return i;
+            
+            s += delay;
+        }
+        
+        return 0;
+    }
+    
 }

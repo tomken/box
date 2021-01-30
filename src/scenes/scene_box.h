@@ -1,20 +1,22 @@
 
-#ifndef __BOX_H__
-#define __BOX_H__
+#ifndef __BOX_SCENE_H__
+#define __BOX_SCENE_H__
 
 #include "app/app.h"
 
 using namespace app;
 
-namespace box {
+namespace app {
     
-    class Game : public Window {
+    class Box : public Scene {
     public:
-        Game();
-        ~Game();
+        Box();
+        ~Box();
         
-    public:
-        virtual void onCreate();
+    public: // for Scene
+        virtual void onEnter();
+        virtual void onLeave();
+        virtual void onDraw(Canvas& canvas);
         
     public:
         virtual void onMouseDown(int x, int y);
@@ -27,13 +29,12 @@ namespace box {
         void convert2index(int x, int y, int &index);
         int random(int min, int max);
         
-        void initStart();
         void initGame();
-        void initEnd();
-        
         void resetGame();
         
         void checkWin(int x, int y);
+        
+        void process(int x, int y);
         
     private:
         Image* ren;
@@ -42,16 +43,20 @@ namespace box {
         int    renIndex;
         int    clickCount;
         
+        int    radius;
+        int    clickX;
+        int    clickY;
+        
+        uint64_t  _lastTime;
+        bool   isClick;
+        
         bool   isPress;
         bool   isFinished;
         bool   ignorEvent;
         
-        Scene*  _start;
-        Scene*  _game;
-        Scene*  _end;
         std::vector<Image*>  _boxs;
     };
     
 }
 
-#endif // __BOX_H__
+#endif // __BOX_SCENE_H__

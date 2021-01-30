@@ -34,6 +34,9 @@ namespace app {
     }
     
     void Button::onMouseUp(int x, int y) {
+        if (!isVisible())
+            return;
+        
         if (_clickCb.isGood()) {
             _clickCb(this);
         }

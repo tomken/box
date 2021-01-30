@@ -6,36 +6,33 @@
 
 namespace app {
     
-    class Sprite : public Image {
+    class Sprite : public Node {
     public:
         Sprite();
         ~Sprite();
         
-        void setImage1(const std::string& path) {
-            _image1->setPath(path);
-        }
+    public:
+        void addImage(const std::string& path, uint64_t delay);
+        void start();
+        void stop();
         
-        void setImage2(const std::string& path) {
-            _image2->setPath(path);
-        }
+    public: // for Node;
+        virtual void setPosition(float x, float y);
+        virtual void setSize(float w, float h);
+        virtual void onDraw(Canvas &canvas);
         
-        virtual void setPosition(float x, float y) {
-            _image1->setPosition(x, y);
-            _image2->setPosition(x, y);
-        }
-    
-        virtual void setSize(float w, float h) {
-            _image1->setSize(w, h);
-            _image2->setSize(w, h);
-        }
+    private:
+        int getIndex();
         
-        void setImage();
-        void onDraw(Canvas &canvas);
     protected:
-        Image*    _image1;
-        Image*    _image2;
+        std::vector<Image*>  _images;
+        std::vector<uint64_t> _delays;
+
+        uint64_t       _startTime;
+        uint64_t       _currentTime;
+        uint64_t       _totalTime;
         
-        bool      _seeImage1;
+        bool           _isRunning;
     };
 }
 

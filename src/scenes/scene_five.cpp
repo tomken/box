@@ -1,5 +1,5 @@
 
-#include "window_five.h"
+#include "scene_five.h"
 
 int info_timeout_turn = 1000; /* time for one turn in milliseconds */
 int info_time_left  = 1000000000; /* left time for a game */
@@ -8,7 +8,7 @@ int info_exact5 = 0;
 int info_renju  = 0;
 int terminateAI;
 
-namespace gobang {
+namespace app {
 
     const int boardSize = 15;
 
@@ -21,17 +21,23 @@ namespace gobang {
     const int grid_v_r = grid_x + 4 + piece_s * boardSize;
     const int grid_v_b = grid_y + 4 + piece_s * boardSize;
 
-    Game::Game() : Window(800, 600) {
-    }
-
-    Game::~Game() {
+    Five::Five() {
+        isFirst    = false;
+        aiThinking = false;
+        playerO = playerX = currPlayer = 0;
+        iPlayerO = 1; iPlayerX = 0;
         
+        initGame();
     }
 
-    void Game::onMouseDown(int x, int y) {
+    Five::~Five() {
     }
 
-    void Game::onMouseMove(int x, int y) {
+    void Five::onMouseDown(int x, int y) {
+        Scene::onMouseDown(x, y);
+    }
+
+    void Five::onMouseMove(int x, int y) {
         if (isFinished) return;
         
         int cx, cy;
@@ -40,101 +46,58 @@ namespace gobang {
         }
     }
 
-    void Game::onMouseUp(int x, int y) {
-        if (currentScene() == _start) {
-            if (_first->inBounds(x, y)) {
-                isFirst = true;
+    void Five::onMouseUp(int x, int y) {
+        Scene::onMouseUp(x, y);
+        
+        if (isFinished) {
+            if (_restart->inBounds(x, y)) {
                 resetGame();
-                changeScene("game");
-            } else if (_last->inBounds(x, y)) {
-                isFirst = false;
-                resetGame();
-                changeScene("game");
             }
-        } else if (currentScene() == _game) {
-            if (isFinished) {
+        } else {
+            int cx, cy;
+            if (getXY(x, y, cx, cy)) {
+                onManMove(cx, cy);
+            } else {
                 if (_restart->inBounds(x, y)) {
                     resetGame();
                 }
-            } else {
-                int cx, cy;
-                if (getXY(x, y, cx, cy)) {
-                    onManMove(cx, cy);
-                } else {
-                    if (_restart->inBounds(x, y)) {
-                        resetGame();
-                    }
-                }
             }
-        } else if (currentScene() == _end) {
-            changeScene("menu");
         }
     }
 
-    void Game::onKeyPress(int key) {
+    void Five::onKeyPress(int key) {
     }
 
-    void Game::onCreate() {
-        isFirst    = false;
-        aiThinking = false;
-        playerO = playerX = currPlayer = 0;
-        iPlayerO = 1; iPlayerX = 0;
+    void Five::onEnter() {
+        int w, h;
+        context().requestGetWindowSize(w, h);
+        context().requestSetTitle("五子棋 - 后手");
+        _bg->setSize(w, h);
         
-        initStart();
-        initGame();
-        initEnd();
+        _back->setSize(50, 50);
+        _back->setPosition(w - 50 - 10, 10);
         
-        changeScene("menu");
+        resetGame();
     }
 
-    int Game::random(int min, int max){
+    int Five::random(int min, int max){
         return (rand() % (max - min)) + min;
     }
 
-    void Game::initStart() {
-        _start = new Scene();
+    void Five::initGame() {
         Layer* layer = new Layer();
         
-    //    Shape* shape = new Shape();
-    //    shape->setPosition(0, 0);
-    //    shape->setSize(_width, _height);
-    //    shape->setFillColor(Color::White);
-    //    layer->addNode(shape);
+        _bg = new Image();
+        _bg->setPosition(0, 0);
+        _bg->setPath("five_background.jpg");
+        layer->addNode(_bg);
         
-        int x = (_width  - 280) / 2;
-        int y = (_height - 325) / 2 - 100;
-        
-        Image* image = new Image();
-        image->setPosition(x, y);
-        image->setSize(280, 325);
-        image->setPath("begin.png");
-        layer->addNode(image);
-        
-        _first = new Image();
-        _first->setPosition((_width - 115)/2 - 100, _height - 200);
-        _first->setSize(115, 68);
-        _first->setPath("five_first.png");
-        layer->addNode(_first);
-        
-        _last = new Image();
-        _last->setPosition((_width - 115)/2 + 100, _height - 200);
-        _last->setSize(115, 68);
-        _last->setPath("five_last.png");
-        layer->addNode(_last);
-        
-        _start->addLayer(layer);
-        addScene("menu", _start);
-    }
-
-    void Game::initGame() {
-        _game = new Scene();
-        Layer* layer = new Layer();
-        
-        Image* bg = new Image();
-        bg->setPosition(0, 0);
-        bg->setSize(_width, _height);
-        bg->setPath("five_background.jpg");
-        layer->addNode(bg);
+        _back = new ImageButton();
+        _back->setTag("back");
+        _back->setNormalImage("english/back_n.png");
+        _back->setPressImage("english/back_p.png");
+        _back->setClickCallback(app::bind(&Five::onClick, this));
+        layer->addNode(_back);
         
         Image* grid = new Image();
         grid->setPosition(grid_x, grid_x);
@@ -143,7 +106,7 @@ namespace gobang {
         grid->setPath("five_chessboard.jpg");
         layer->addNode(grid);
         
-        _game->addLayer(layer);
+        addLayer(layer);
         
     //    mage* bg = new Image();
     //    bg->setPosition(0, 0);
@@ -152,7 +115,7 @@ namespace gobang {
     //    layer->addNode(bg);
         
         _grid = new Layer();
-        _game->addLayer(_grid);
+        addLayer(_grid);
         
         Layer* top = new Layer();
         _restart = new Image();
@@ -179,35 +142,10 @@ namespace gobang {
         _locate->setPath("five_select.png");
         top->addNode(_locate);
         
-        _game->addLayer(top);
-        
-        addScene("game", _game);
+        addLayer(top);
     }
 
-    void Game::initEnd() {
-        _end = new Scene();
-        Layer* layer = new Layer();
-        
-        Shape* shape = new Shape();
-        shape->setPosition(0, 0);
-        shape->setSize(_width, _height);
-        shape->setFillColor(Color::White);
-        layer->addNode(shape);
-        
-        int x = (_width  - 534) / 2;
-        int y = (_height - 300) / 2;
-        
-        Image* image = new Image();
-        image->setPosition(x, y);
-        image->setSize(534, 300);
-        image->setPath("success.jpg");
-        layer->addNode(image);
-        
-        _end->addLayer(layer);
-        addScene("end", _end);
-    }
-
-    void Game::resetGame() {
+    void Five::resetGame() {
         _winer->setAlpha(0.0f);
         _winer->setVisible(false);
         _loser->setAlpha(0.0f);
@@ -236,7 +174,7 @@ namespace gobang {
         startThinking();
     }
 
-    void Game::newPlayer(OXPlayer *&player, int playerIndex) {
+    void Five::newPlayer(OXPlayer *&player, int playerIndex) {
         delete player;
         switch (playerIndex) {
         case 0: player = 0; break;
@@ -245,7 +183,7 @@ namespace gobang {
         }
     }
 
-    void Game::startThinking() {
+    void Five::startThinking() {
         if (currPlayer) {
             terminateAI = 0;
             aiThinking = true;
@@ -254,7 +192,7 @@ namespace gobang {
         }
     }
 
-    void Game::doThinking() {
+    void Five::doThinking() {
         int cx, cy;
         
         //Sleep(2000);
@@ -267,7 +205,7 @@ namespace gobang {
         onChessMove(cx, cy);
     }
 
-    void Game::onChessMove(int x, int y) {
+    void Five::onChessMove(int x, int y) {
         game.player() == OP ? oTimer.stop() : xTimer.stop();
         game.move(x, y);
         addPiece(x, y, currPlayer);
@@ -301,7 +239,7 @@ namespace gobang {
         startThinking();
     }
 
-    void Game::onManMove(int cx, int cy) {
+    void Five::onManMove(int cx, int cy) {
         if (game.cell(cx, cy) != EMPTY) {
             return;
         }
@@ -309,7 +247,7 @@ namespace gobang {
         onChessMove(cx, cy);
     }
 
-    bool Game::getXY(int x, int y, int& cx, int& cy) {
+    bool Five::getXY(int x, int y, int& cx, int& cy) {
         if (x < grid_v_l) return false;
         if (x > grid_v_r) return false;
         if (y < grid_v_t) return false;
@@ -321,7 +259,7 @@ namespace gobang {
         return true;
     }
 
-    void Game::addPiece(int cx, int cy, bool isAi) {
+    void Five::addPiece(int cx, int cy, bool isAi) {
         int x = cx * piece_s + grid_v_l;
         int y = cy * piece_s + grid_v_t;
         const char* img = isAi ? "five_b2.png" : "five_w2.png";
@@ -335,7 +273,7 @@ namespace gobang {
         // image->fadeIn();
     }
 
-    void Game::showResult(bool isYourWin) {
+    void Five::showResult(bool isYourWin) {
         if (isYourWin) {
             _winer->setVisible(true);
             _winer->fadeIn();
@@ -347,10 +285,17 @@ namespace gobang {
         isFinished = true;
     }
 
-    void Game::showLocation(int cx, int cy) {
+    void Five::showLocation(int cx, int cy) {
         int x = cx * piece_s + grid_v_l;
         int y = cy * piece_s + grid_v_t;
         _locate->setPosition(x, y);
+    }
+    
+    void Five::onClick(Button* btn) {
+        if (btn == _back) {
+            context().requestChangeScene("menu");
+            return;
+        }
     }
 
 }
