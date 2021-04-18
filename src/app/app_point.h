@@ -30,6 +30,17 @@ namespace app {
         float x;
         float y;
     };
+    
+    // 0.0f - 1.0f
+    class Anchor {
+    public:
+        Anchor() : wRange(0.0f), hRange(0.0f) {;}
+        Anchor(float wr, float hr) : wRange(wr), hRange(hr) {;}
+        
+    public:
+        float  wRange;
+        float  hRange;
+    };
 }
 
 #endif // __APP_POINT_H__

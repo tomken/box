@@ -67,7 +67,7 @@
 //}
 //
 //// add module
-////    ScriptModule& m = ctx.addModule("lmk");
+////    ScriptModule& m = ctx.addModule("app");
 ////    m.addValue("width", 100);
 ////    m.addClass<AA>("AA", obj);
 //// m.add("bridge", ScriptFunction("call", app::bind(&print_cb)));

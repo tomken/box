@@ -14,6 +14,8 @@ folders.append('box2d-lite')
 folders.append('engine')
 folders.append('gobang')
 folders.append('test')
+folders.append('layout')
+folders.append('particle')
 
 folders.append('platform/' + TMAKE_TARGET)
 
@@ -35,7 +37,8 @@ for folder in folders:
 
   h_dirs.append(tmake_path('./src/' + folder))
 
-flags = ' -std=c++11 '
+flags = ''
+cxx_flags = ' -std=c++11 '
 defs = []
 
 if TMAKE_TARGET == "mac":
@@ -66,6 +69,7 @@ tmake_cxx_binary(
   srcs = src_list,
   include_dirs = h_dirs,
   linker_flags = flags,
+  cxx_flags = cxx_flags,
   defines = defs,
   deps = [],
   windows_deps = [

@@ -8,6 +8,53 @@
 
 namespace app {
     
+    class ColorF {
+    public:
+        float r, g, b, a;
+        
+    public:
+        ColorF() : r(0), g(0), b(0), a(0) {}
+        ColorF(float nr, float ng, float nb, float na) : r(nr), g(ng), b(nb), a(na) {}
+        
+        //Color(int nr, int ng, int nb, int na) : r(nr / 255.0), g(ng / 255.0), b(nb / 255.0), a(na / 255.0) {}
+        
+        void set(float nr, float ng, float nb, float na) {
+            r = nr; g = ng; b = nb; a = na;
+        }
+    };
+    
+    inline ColorF operator+ (const ColorF& color, const ColorF& o) {
+        return ColorF(color.r + o.r, color.g + o.g, color.b + o.b, color.a + o.a);
+    }
+    
+    inline ColorF operator+ (const ColorF& color, float f) {
+        return ColorF(color.r + f, color.g + f, color.b + f, color.a + f);
+    }
+    
+    inline ColorF operator- (const ColorF& color, const ColorF& o) {
+        return ColorF(color.r - o.r, color.g - o.g, color.b - o.b, color.a - o.a);
+    }
+    
+    inline ColorF operator- (const ColorF& color, float f) {
+        return ColorF(color.r - f, color.g - f, color.b - f, color.a - f);
+    }
+    
+    inline ColorF operator* (const ColorF& color, const ColorF& o) {
+        return ColorF(color.r * o.r, color.g * o.g, color.b * o.b, color.a * o.a);
+    }
+    
+    inline ColorF operator* (const ColorF& color, float f) {
+        return ColorF(color.r * f, color.g * f, color.b * f, color.a * f);
+    }
+    
+    inline ColorF operator/ (const ColorF& color, const ColorF& o) {
+        return ColorF(color.r / o.r, color.g / o.g, color.b / o.b, color.a / o.a);
+    }
+    
+    inline ColorF operator/ (const ColorF& color, float f) {
+        return ColorF(color.r / f, color.g / f, color.b / f, color.a / f);
+    }
+    
     class Color {
     public:
         Color() {

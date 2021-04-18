@@ -17,6 +17,7 @@ const Items items[] = {
     { 50, 280, 200, 40, "Link Link", "link_link"},
     { 50, 340, 200, 40, "Box",       "box"},
     { 50, 400, 200, 40, "Some",      "some"},
+    { 50, 460, 200, 40, "Task1",     "taskOne"},
 };
 
 namespace app {

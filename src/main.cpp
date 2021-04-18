@@ -9,6 +9,7 @@
 #include "scene_box.h"
 #include "scene_push_box.h"
 #include "scene_five.h"
+#include "scene_taskOne.h"
 
 #include "app/app_init.h"
 
@@ -45,8 +46,9 @@ namespace game {
             addScene("box", new Box());
             addScene("push_box", new PushBox());
             addScene("five", new Five());
+            addScene("taskOne", new Task1());
             
-            changeScene("menu");
+            changeScene("english");
         }
         
     private:
