@@ -136,7 +136,7 @@ namespace app {
     
     void English::loadWordsFile() {
         Path pp(ROOT_PATH);
-        pp.join("english2.txt");
+        pp.join("english.txt");
         const char* path = pp.toString().data();
         std::fstream f(path, std::ios::in);
         if (f) {
